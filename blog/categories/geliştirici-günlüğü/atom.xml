@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Geliştirici-Günlüğü | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/geliştirici-günlüğü/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby’ de Değişkenler ve Veri Türleri]]></title>
+    <link href="http://lab2023.github.com/blog/2012/04/09/ruby-de-degiskenler-ve-veri-turleri/"/>
+    <updated>2012-04-09T19:50:00+03:00</updated>
+    <id>http://lab2023.github.com/blog/2012/04/09/ruby-de-degiskenler-ve-veri-turleri</id>
+    <content type="html"><![CDATA[<p><img class="left" src="http://www.gelistiricigunlugu.com/wp-content/uploads/2012/04/ruby.png" title="Ruby’ de Değişkenler ve Veri Türleri" ></p>
+
+<p>Ruby’ de Değişkenler ve Veri Türleri ile ilgili bir yazı yazdım. İlgili yazıya şuradan ulaşabilirsiniz. <a href="http://www.gelistiricigunlugu.com/ruby-de-degiskenler-ve-veri-turleri-2/">http://www.gelistiricigunlugu.com/ruby-de-degiskenler-ve-veri-turleri-2/</a></p>
+]]></content>
+  </entry>
+  
+</feed>

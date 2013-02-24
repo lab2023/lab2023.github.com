@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: validation | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/validation/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby On Rails'te Client Side Validasyon]]></title>
+    <link href="http://lab2023.github.com/blog/2012/10/12/ruby-on-rails-te-client-side-validasyon/"/>
+    <updated>2012-10-12T15:00:00+03:00</updated>
+    <id>http://lab2023.github.com/blog/2012/10/12/ruby-on-rails-te-client-side-validasyon</id>
+    <content type="html"><![CDATA[<p>Client Side validasyonlar için <a href="https://github.com/bcardarella/client_side_validations">ClientSideValidations</a> gemini kullanıyoruz. <code>Simple Form</code> ile çalışabilmesi içinde <a href="https://github.com/dockyard/client_side_validations-simple_form">ClientSideValidationsSimpleForm</a> gemini kullanıyoruz.</p>
+
+<h3>Kurulum</h3>
+
+<p>Gemleri <code>Gemfile</code>' a ekleyip <code>bundle install</code> yapalım</p>
+
+<p><code>ruby
+gem 'client_side_validations'
+gem 'client_side_validations-simple_form'
+</code></p>
+
+<p>Daha sonra kurulum komutunu çalştıralım.</p>
+
+<p><code>ruby
+rails g client_side_validations:install
+</code></p>
+
+<p><code>config/initializers/client_side_validations.rb</code> başlangıç dosyasının eklendiğini görüyoruz.</p>
+
+<p>Eğer istersek gem' lerin kullandığı javascript dosyaların assets dizinin altına kopyalayabiliriz.</p>
+
+<p><code>ruby
+rails g client_side_validations:copy_assets
+</code></p>
+
+<!-- more -->
+
+
+<h3>Kullanım</h3>
+
+<p><code>app/assets/javascripts/application.js</code> dosyasında gerekli dosyaları çağıralım.</p>
+
+<p><code>javascript
+//= require rails.validations
+//= require rails.validations.simple_form
+</code></p>
+
+<p>Forma <code>:validate =&gt; true</code> parametresini geçiyoruz.</p>
+
+<p>```haml
+= simple_form_for(@product, :validate => true) do |f|
+  = f.error_notification</p>
+
+<p>  .form-inputs</p>
+
+<pre><code>= f.input :title
+= f.input :price
+= f.input :status
+</code></pre>
+
+<p>  .form-actions</p>
+
+<pre><code>= f.button :submit
+</code></pre>
+
+<p>```</p>
+
+<p>Şimdide modele gidip validasyonları yazalım.</p>
+
+<p>```ruby
+class Product &lt; ActiveRecord::Base
+  attr_accessible :price, :status, :title
+  validates_presence_of :price, :title</p>
+
+<p>  validates_length_of :title, :minimum => 5, :maximum => 10</p>
+
+<p>  validates_numericality_of :price, :greater_than => 10, :less_than => 100</p>
+
+<p>  validates_uniqueness_of :title
+end
+```</p>
+
+<p>İstersek validasyonları form içinde tek bir input' a da ekleyebiliyoruz.</p>
+
+<p><code>haml
+= f.input :title, :validate =&gt; { :presence =&gt; true }
+</code>
+<img src="https://dl.dropbox.com/u/44821222/validation.png" alt="validates_presence_of" />
+<img src="https://dl.dropbox.com/u/44821222/validation-two.png" alt="validates_numericality_of" />
+<img src="https://dl.dropbox.com/u/44821222/uniqueness1.png" alt="validates_uniqueness_of" /></p>
+
+<p>Son ekran görüntüsünde dikkat ettiyseniz ajax ile uniq olup olmadığını bile kontrol edebiliyor.</p>
+
+<p>En kısa sürede <a href="http://www.lab2023.com">lab2023</a> bünyesinde <code>open-source</code> olarak geliştirdiğimiz  <a href="https://github.com/lab2023/rails-template">Rails Template</a>' e ekleyeceğiz. <a href="https://github.com/lab2023/rails-template/issues/30">Issue</a>' yu girdim bile :)</p>
+
+<p>İyi çalışmalar dilerim.</p>
+]]></content>
+  </entry>
+  
+</feed>

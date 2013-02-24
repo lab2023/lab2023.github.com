@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ubuntu | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/ubuntu/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu makine üzerinde kullanıcı şifrelerini değiştirme]]></title>
+    <link href="http://lab2023.github.com/blog/2012/10/22/ubuntu-makine-uzerinde-kullanici-sifrelerini-degistirme/"/>
+    <updated>2012-10-22T15:08:00+03:00</updated>
+    <id>http://lab2023.github.com/blog/2012/10/22/ubuntu-makine-uzerinde-kullanici-sifrelerini-degistirme</id>
+    <content type="html"><![CDATA[<p><code>root</code> olarak oturum açtıktan sonra;</p>
+
+<ul>
+<li><code>passwd</code> komutunu çalıştırarak root şifresini</li>
+<li><code>passwd username</code> komutunu çalıştırarak diğer kullanıcların şifrelerini değiştirebiliriz.</li>
+</ul>
+
+
+<p>Kolaylıklar...</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: rest | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/rest/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby On Rails ile Rails::API Gem'ini Kullanarak API Geliştirme]]></title>
+    <link href="http://lab2023.github.com/blog/2012/11/24/ruby-on-rails-ile-rails-api-gem-ini-kullanarak-api-gelistirme/"/>
+    <updated>2012-11-24T17:25:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2012/11/24/ruby-on-rails-ile-rails-api-gem-ini-kullanarak-api-gelistirme</id>
+    <content type="html"><![CDATA[<p>Daha önce API geliştirme ile ilgili <a href="http://www.gelistiricigunlugu.com/ruby-on-rails-te-api-yazalim/">Ruby On Rails’ te API Yazalım</a> başlıklı bir yazı yazmıştım. Bu yazımda ise <code>Rails::API</code> gem' ini kullanarak <code>API</code> geliştirmeyi anlatacağım.</p>
+
+<p><code>Rails::API</code> bir <code>API</code> için gerekli olan kütüphaneler dışındaki kütüphaneleri çıkararak(view, assests ...), normal bir rails projesine göre daha hafif bir proje oluşturabilmemizi sağlayan gem.</p>
+
+<p>Aşağıdaki komutu çalıştırarak gem' i yükleyelim</p>
+
+<p><code>gem install rails-api</code></p>
+
+<!-- more -->
+
+
+<p>Yeni proje oluşturmak için aşağıdaki komutu kullanacağız.</p>
+
+<p><code>rails-api new pigon</code></p>
+
+<p>Komutu çalışıtrdıktan sonra projenin dosyalarına baktığımızda <code>app</code> dizininin çok sade olduğunu görüyoruz. API geliştirme ihtiyacı dışındaki şeyler(views, helpers, assets) atılmıştır. <code>ApplicationController</code>' a baktığımızda <code>ActionController::Base</code> yerine daha hafif olan <code>ActionController::API</code>' den türetildiğini görüyoruz.</p>
+
+<p><code>ruby
+class ApplicationController &lt; ActionController::API
+end
+</code></p>
+
+<p>En büyük değişiklik ise <code>Gemfile</code> dosyamızda. <code>rails-api</code> gem' ini buraya eklenmiş olarak görüyoruz fakat <code>assets</code> grubundaki gem' lerin ve <code>jquery-rails</code> gem' inin eklenmediğini görüyoruz.</p>
+
+<p>```ruby
+source 'https://rubygems.org'</p>
+
+<p>gem 'rails', '3.2.8'</p>
+
+<h1>Bundle edge Rails instead:</h1>
+
+<h1>gem 'rails', :git => 'git://github.com/rails/rails.git'</h1>
+
+<p>gem 'rails-api'</p>
+
+<p>gem 'sqlite3'
+```</p>
+
+<p>Peki generator' larda nasıl bir değişiklik oluyor?. <code>scaffold</code> ile <code>Product</code> modeli oluşturduğumuzda <code>assets</code>, <code>views</code> ve <code>helpers</code> dosyalarının oluşturulmadığını görüyoruz.</p>
+
+<p>```bash
+Muhammets-iMac:pigon muhammetdilek$ rails g scaffold Product title:string price:decimal</p>
+
+<pre><code>  invoke  active_record
+  create    db/migrate/20121003130313_create_products.rb
+  create    app/models/product.rb
+  invoke    test_unit
+  create      test/unit/product_test.rb
+  create      test/fixtures/products.yml
+  invoke  api_resource_route
+   route    resources :products, except: :edit
+  invoke  scaffold_controller
+  create    app/controllers/products_controller.rb
+  invoke    test_unit
+  create      test/functional/products_controller_test.rb
+</code></pre>
+
+<p>```</p>
+
+<p>Gördüğünüz gibi <code>model</code>, <code>controller</code> ve <code>test</code> dosyalarından oluşan bir yapı oluşturuldu. Şimdi migration' ı çalıştıralım.</p>
+
+<p><code>bash
+Muhammets-iMac:pigon muhammetdilek$ rake db:migrate
+</code></p>
+
+<p><code>scaffold</code> tarafından generate edilen <code>ProductsController</code>' ına baktığımızda sadece <code>JSON</code>formatında veri döndürüldüğünü göreceksiniz.</p>
+
+<p>```ruby
+class ProductsController &lt; ApplicationController
+  # GET /products
+  # GET /products.json
+  def index</p>
+
+<pre><code>@products = Product.all
+
+render json: @products
+</code></pre>
+
+<p>  end</p>
+
+<p>  # GET /products/1
+  # GET /products/1.json
+  def show</p>
+
+<pre><code>@product = Product.find(params[:id])
+
+render json: @product
+</code></pre>
+
+<p>  end</p>
+
+<p>  # GET /products/new
+  # GET /products/new.json
+  def new</p>
+
+<pre><code>@product = Product.new
+
+render json: @product
+</code></pre>
+
+<p>  end</p>
+
+<p>  # POST /products
+  # POST /products.json
+  def create</p>
+
+<pre><code>@product = Product.new(params[:product])
+
+if @product.save
+  render json: @product, status: :created, location: @product
+else
+  render json: @product.errors, status: :unprocessable_entity
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>  # PATCH/PUT /products/1
+  # PATCH/PUT /products/1.json
+  def update</p>
+
+<pre><code>@product = Product.find(params[:id])
+
+if @product.update_attributes(params[:product])
+  head :no_content
+else
+  render json: @product.errors, status: :unprocessable_entity
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>  # DELETE /products/1
+  # DELETE /products/1.json
+  def destroy</p>
+
+<pre><code>@product = Product.find(params[:id])
+@product.destroy
+
+head :no_content
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Uygulamamızın hiç <code>HTML</code> view renderlemediğini sadece <code>JSON</code> renderlediğini görüyoruz. Tarayıcımızda <code>/products</code> yolunu ziyaret ettiğimizde <code>JSON</code> formatında henüz ürün eklemediğimiz için boş bir <code>array</code> renderlediğini göreceğiz.</p>
+
+<p><code>curl</code> ile uygulamamıza product ekleyelim.</p>
+
+<p><code>bash
+Muhammets-iMac:pigon muhammetdilek$ curl -d "product[title]=Product1&amp;product[price]=3.3" http://pigon.dev/products
+{"created_at":"2012-10-03T13:27:10Z","id":3,"price":"3.3","title":"Product1","updated_at":"2012-10-03T13:27:10Z"}
+</code></p>
+
+<p><code>/products</code> adresini ziyeret ettiğimizde</p>
+
+<p>```json
+[</p>
+
+<pre><code>{
+    created_at: "2012-10-03T13:28:27Z",
+    id: 1,
+    price: "3.3",
+    title: "Product1",
+    updated_at: "2012-10-03T13:28:27Z"
+}
+</code></pre>
+
+<p>]
+```</p>
+
+<p><code>JSON</code> formatında eklediğimiz ürünü görüyoruz.</p>
+
+<p>Şimdide uygulamamıza <code>XML</code> desteği ekleyelim.</p>
+
+<p>Burada <code>respond_to</code> metodunu kullanacağız.</p>
+
+<p>```ruby
+  def index</p>
+
+<pre><code>@products = Product.all
+
+respond_to do |format|
+  format.json { render json: @products }
+  format.xml { render xml: @products }
+end
+</code></pre>
+
+<p>  end
+```</p>
+
+<p><code>/products.xml</code> sayfasını ziyaret ettiğimizde aşağıdaki hatayı alacağız.</p>
+
+<p>```bash
+NoMethodError in ProductsController#index</p>
+
+<p>undefined method `respond_to' for #&lt;ProductsController:0x007fbc096e1438>
+```</p>
+
+<p><code>Rails::API</code> de uygulamayı daha hafif hale getirmek için bir dizi özellik çıkarılmış durumda ama biz istersek bu özellikleri kolayca uygulamalarımza geri ekleyebiliriz. Yukarıdaki aldığımız hata da <code>ActionController::MimeResponds</code> modülü etkin olmadığından kaynaklanıyor. <code>ProductController</code>' a <code>ActionController::MimeResponds</code> modülünü ekleyelim.</p>
+
+<p><code>ruby
+class ProductsController &lt; ApplicationController
+  include ActionController::MimeResponds
+  #Actions
+end
+</code></p>
+
+<p><img src="https://dl.dropbox.com/u/44821222/xml-response.png" alt="xml response" /></p>
+
+<p><code>Rails::API</code> README dosyasında ihtiyacımız çerçevesinde hangi <a href="https://github.com/spastorino/rails-api/blob/master/README.md">modulleri</a> kullanabilecegimiz listelenmiştir. Ancak bu liste modüllerin tam listesi değil. <code>Rails</code> <a href="https://github.com/rails/rails/blob/master/actionpack/lib/action_controller/base.rb#L201">kodları</a> ile <code>Rails::API</code>nin <a href="https://github.com/spastorino/rails-api/blob/master/lib/rails-api/action_controller/api.rb#L124">kodlarını</a> karşılaştırdığımızda bu listedeki eksik olanları görebiliyoruz.</p>
+
+<p>Bazı modülleri kullanmak istediğimizde  modülü sadece controller' da çağırmak yetmeyebibilir. <code>Rails::API</code> <code>Controller</code>' ları azalttığı gibi aynı zamanda <code>Rack middleware</code> katmanınıda azaltmıştır. Normal bir rails uygulamasındaki middleware' lar ile <code>Rails::API</code> gem' ini kullanarak olulturduğumuz bir uygulamadaki middleware' ları karşılaştırırsak aşağıdaki middleware' ların çıkarılmış olduğunu görüyoruz.</p>
+
+<p><code>bash
+use Rack::MethodOverride
+use ActionDispatch::Cookies
+use ActionDispatch::Session::CookieStore
+use ActionDispatch::Flash
+use ActionDispatch::BestStandardsSupport
+</code></p>
+
+<p>İhtiyacımız çerçevesinde bu middleware' ları <code>application.rb</code> ye ekleyerek kullanabiliriz.</p>
+
+<p><code>Rails::API</code> kullanırken karşılaşılan sorunların birçoğu issuelarda çözülmüş. https://github.com/rails-api/rails-api/issues?page=1&amp;state=closed   Gözatmakta fayda var.</p>
+
+<p>İyi çalışmalar...</p>
+]]></content>
+  </entry>
+  
+</feed>

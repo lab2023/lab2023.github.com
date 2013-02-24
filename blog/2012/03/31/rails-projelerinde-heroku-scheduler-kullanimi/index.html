@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Rails Projelerinde Heroku Scheduler Kullanımı - lab2023 - internet teknolojileri</title>
+  <meta name="author" content="lab2023">
+
+  
+  <meta name="description" content="Rails ile geliştiridiğim projelerimi genelde heroku üzerinde tutuyorum. Bu yazımda da bir projede kullandığım Scheduler &#8216;i anlatacağım. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://lab2023.github.com/blog/2012/03/31/rails-projelerinde-heroku-scheduler-kullanimi/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="lab2023 - internet teknolojileri" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">lab2023 - internet teknolojileri</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:lab2023.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Rails Projelerinde Heroku Scheduler Kullanımı</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-31T14:51:00+03:00" pubdate data-updated="true">Mar 31<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Rails ile geliştiridiğim projelerimi genelde <a href="http://heroku.com">heroku</a> üzerinde tutuyorum. Bu yazımda da bir projede kullandığım <code>Scheduler</code> &#8216;i anlatacağım.</p>
+
+<p><img class="left" src="/images/scheduler.png" title="Heroku Scheduler" > <code>Scheduler (Zamanlayıcı)</code> Heroku üzerindeki projelerimizde <code>cron</code> yerine kullanabilecegimiz, <code>cron</code> &#8216;dan daha gelişmiş add-on. Mesela sisteminizdeki kullanıcıları günlük olarak gelişmelereden haberdar etmek istiyoruz. Hergün uygulamaya girip kendimiz mail gönderme fonksiyonunu çalıştırmayacağız herhalde :). İşte <code>Scheduler</code> burada devreye girip bizim yerimize istediğimiz zamanlarda mail gönderme fonksiyonunu çalıştırıyor.</p>
+
+<!-- more -->
+
+
+<p>Scheduler günlük, saatlik veya 10 dakikalık zaman dilimlerinde görev tanımlama imkanı sunuyor. Şimdilik bunların hepsi ücretsiz :)</p>
+
+<p>Uygulamamıza <code>Scheduler</code> eklemek için</p>
+
+<ol>
+<li><p><a href="https://addons.heroku.com/scheduler">https://addons.heroku.com/scheduler</a> sayfasındaki add butonuna tıklayarak yada,</p></li>
+<li>Terminalden aşağıdaki komutu yazarak</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>heroku addons:add scheduler:standard</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ekleme yapıyoruz.
+Daha sonra <code>lib/rake</code> klasörü altına <code>scheduler.rake</code> isminde bir dosya oluşturup içine şu kodları ekliyoruz.</p>
+
+<figure class='code'><figcaption><span>scheduler.rake</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">desc</span> <span class="s2">&quot;This task is called by the Heroku scheduler add-on&quot;</span>
+</span><span class='line'><span class="n">task</span> <span class="ss">:update_feed</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;Updating feed...&quot;</span>
+</span><span class='line'>    <span class="no">NewsFeed</span><span class="o">.</span><span class="n">update</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;done.&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">task</span> <span class="ss">:send_reminders</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span>
+</span><span class='line'>    <span class="no">User</span><span class="o">.</span><span class="n">send_reminders</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Yukarıdaki kodu açıklayacak olursak; Burada <code>:update_feed</code> görev ismi. <code>puts "Updating feed..."</code> ile log&#8217; a <em>Updating feed&#8230;</em> yazıyor. Sonra <code>NewsFeed</code> classının <code>update</code> metodunu çalıştırıyor. Son satırda ise log&#8217; a <em>done.</em> yazıyor. Diğer görevde aynı mantıkla çalışıyor. Buradaki NewsFeed ve User class&#8217; ları NewsFeed ve User modelimizin class&#8217; ları.</p>
+
+<p><img class="left" src="/images/37-original.jpg" title="Heroku Scheduler" >Evet şimdi görevleri yazdık, Heroku&#8217; da tanımlama zamanı. Uygulamamızın General Info sayfasına gidiyoruz ve sağ üstteki drop down şeklindeki add-ons menüsüne tıklayarak uygulamamıza eklemiş olduğumuz add-on ları görüyoruz. Buradan Scheduler&#8217; i seçip scheduler dashboard&#8217; a ulaşıyoruz. Add job diyerek yeni bir görev tanımlıyoruz. Görev isminin başına rake komutunu eklemeyi unutmayalım. Çünkü rails&#8217; de görevleri rake komutu ile çalıştırıyoruz.</p>
+
+<p>Burada tanımladığımız görevlerin zaman dilimi yukarıda da bahsettiğim gibi saatlik, günlük veya 10 dakikalık. Peki kendimiz bir zaman dilimi belirleyemez miyiz?. Ben bir görevi haftalık çalıştırmak istedğimde şöyle bir yola başvurdum;</p>
+
+<p>Heroku üzerinde görev zaman dilimini günlük olarak ayarlıyıp, görev koduna da günü kontrol eden if bloğu ekleyerek haftanın istedğim gününde görevi çalıştırıyorum.</p>
+
+<figure class='code'><figcaption><span>scheduler.rake</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">desc</span> <span class="s2">&quot;This task is called by the Heroku scheduler add-on&quot;</span>
+</span><span class='line'><span class="n">task</span> <span class="ss">:send_mail</span>
+</span><span class='line'>  <span class="k">if</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">saturday?</span>
+</span><span class='line'>      <span class="no">User</span><span class="o">.</span><span class="n">send_mail</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Burada <code>Time.now.saturday?</code> kodu true false döndürüyor. Görev de sadece cumartesi günleri çalışıyor. <code>Time.now.saturday?</code> yerine <code>Date.today.wday == 6</code> de kullanabiliriz.</p>
+
+<p>Komut satırına <code>heroku logs --ps run</code> yazarak görev log&#8217; ları görebiliriz.</p>
+
+<p>Kolaylıklar&#8230;</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Muhammet DİLEK</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-31T14:51:00+03:00" pubdate data-updated="true">Mar 31<span>st</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/heroku/'>Heroku</a>, <a class='category' href='/blog/categories/ruby-on-rails/'>Ruby-On-Rails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://lab2023.github.com/blog/2012/03/31/rails-projelerinde-heroku-scheduler-kullanimi/" data-via="lab2023" data-counturl="http://lab2023.github.com/blog/2012/03/31/rails-projelerinde-heroku-scheduler-kullanimi/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/03/06/rubyde-str-replace-string-degistirme/" title="Previous Post: Ruby'de String Replace (String Degistirme)">&laquo; Ruby'de String Replace (String Degistirme)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/04/09/ruby-de-degiskenler-ve-veri-turleri/" title="Next Post: Ruby’ de Değişkenler ve Veri Türleri">Ruby’ de Değişkenler ve Veri Türleri &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/24/octopress-nasil-kullanilir/">Octopress nasıl kullanılır?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/">Rails Projelerinde JQuery Autocomplete Kullanımı</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/25/ruby-on-rails-breadcrumbs-ekmek-kirintisi/">Ruby On Rails Breadcrumbs(Ekmek kırıntısı)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n/">globalize3 ile Çoklu Dil Desteği (I18n)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/21/postgresql-yedek-alma-ve-geri-yukleme/">PostgreSQL Yedek Alma ve Geri Yükleme</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("lab2023", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/lab2023" class="twitter-follow-button" data-show-count="false">Follow @lab2023</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - lab2023 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

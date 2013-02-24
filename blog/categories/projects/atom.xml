@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Projects | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/projects/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Bety Url K&#305;saltma Servisi]]></title>
+    <link href="http://lab2023.github.com/blog/2012/02/26/bety-url-kisaltma-servisi/"/>
+    <updated>2012-02-26T20:49:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2012/02/26/bety-url-kisaltma-servisi</id>
+    <content type="html"><![CDATA[<p><img class="left" src="http://bety.in/assets/logonew.png" width="200" height="200" title="Bety #3" > <a href="http://bety.in">http://bety.in</a> Ruby On Rails kullanarak geliştirdiğim açık kaynak kodlu url kısaltma servisi. Fırsat buldukça geliştirmeye devam edeceğim. Kaynak kodlara <a href="https://github.com/dilekmuhammet/url_shortener">github</a> üzerinden ulaşabilirsiniz.</p>
+
+<p><a href="http://bety.in">Bety</a>’ yi geliştirme aşamasında Ruby ve Rails kodlama standartlarına ulaştım. Ruby Türkçe mail <a href="http://groups.google.com/group/ruby-tr">grubu</a> sağolsun :)</p>
+
+<p>Ruby için kodlama standartları : <a href="https://github.com/bbatsov/ruby-style-guide">https://github.com/bbatsov/ruby-style-guide</a></p>
+
+<p>Rails için kodlama standartları : <a href="https://github.com/bbatsov/rails-style-guide">https://github.com/bbatsov/rails-style-guide</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Pigon Web Servisleri]]></title>
+    <link href="http://lab2023.github.com/blog/2012/01/01/pigon-web-servisleri/"/>
+    <updated>2012-01-01T23:51:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2012/01/01/pigon-web-servisleri</id>
+    <content type="html"><![CDATA[<p><img class="left" src="http://pigon.ws/assets/pigonc.png" title="Pigon Web Servisleri" >
+<a href="http://pigon.ws" title="Pigon Web Servisleri">Pigon Web Servisleri</a>, yaz&#305;l&#305;m geli&#351;tiricilerinin ihitya&ccedil; duyabilece&#287;i verileri API olarak  sunan bir sistemdir.Sistem &uuml;zerinde sunulan servislerin kaynak kodu dahil olmak &uuml;zere hepsi a&ccedil;&#305;k kaynakl&#305;d&#305;r. Proje &#351;u anda Name, University ve Location API ile hizmet vermektedir.<!-- more --></p>
+
+<p><strong>Name API</strong> : &#304;simden cinsiyet bilgisini sunan bir API.<br>
+<strong>University API</strong> : T&uuml;rkiyedeki &uuml;niversitelerin listesini fak&uuml;lte b&ouml;l&uuml;m bilgileri de dahil sunan bir API.<br>
+<strong>Location API</strong> : T&uuml;rkiyedeki &#351;ehir bilgilerini il-il&ccedil;e-semt-mahalle &#351;eklinde sunan bir API.</p>
+
+<p>Di&#287;er API ler i&ccedil;in &ccedil;al&#305;&#351;malar&#305;m devam etmekte. E&#287;er projeye katk&#305;da bulunmak isterseniz elinizdeki datalar&#305; bana g&ouml;nderebilirsiniz. Ben de bunlar&#305;n API'lerini yazar sisteme koyar&#305;m. B&ouml;ylece verilere ula&#351;abilece&#287;imiz ortak bir nokta olu&#351;turabiliriz.<br>
+<strong>Her t&uuml;rl&uuml; &ouml;neri, g&ouml;r&uuml;&#351; ve ele&#351;tirinizi bekliyorum.</strong><br></p>
+]]></content>
+  </entry>
+  
+</feed>

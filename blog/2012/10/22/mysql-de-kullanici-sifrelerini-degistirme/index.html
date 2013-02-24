@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Mysql'de kullanıcı şifrelerini değiştirme - lab2023 - internet teknolojileri</title>
+  <meta name="author" content="lab2023">
+
+  
+  <meta name="description" content="MySQL şifre değiştirme işlemleri için kullandığım iki yöntem var. Onlardan bahsedeceğim. mysqladmin komutunu kullanarak 1
+$ mysqladmin -u root - &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://lab2023.github.com/blog/2012/10/22/mysql-de-kullanici-sifrelerini-degistirme/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="lab2023 - internet teknolojileri" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">lab2023 - internet teknolojileri</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:lab2023.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Mysql'de Kullanıcı şifrelerini Değiştirme</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-22T15:10:00+03:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>MySQL şifre değiştirme işlemleri için kullandığım iki yöntem var. Onlardan bahsedeceğim.</p>
+
+<h3><code>mysqladmin</code> komutunu kullanarak</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mysqladmin -u root -pcurrentpassword password <span class="s1">&#39;newpassword&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>-p<strong>currentpassword</strong> teki <code>p</code> ile <code>currentpassword</code> bitişik. Bu alana şimdiki şifremizi <code>newpassword</code> alanınan da yeni şifremizi yazıyoruz.</p></blockquote>
+
+<!-- more -->
+
+
+<h3><code>UPDATE</code> sql komutunu kullanarak</h3>
+
+<p>1) <strong>Mysql server&#8217; a login olalım;</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mysql -u root -p
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2) <strong>mysql database&#8217; ini seçelim;</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mysql&gt; use mysql;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3) <strong>Aşağıdaki sql komutuyla şifreyi değiştiriyoruz;</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mysql&gt; update user <span class="nb">set </span><span class="nv">password</span><span class="o">=</span>PASSWORD<span class="o">(</span><span class="s2">&quot;NEWPASSWORD&quot;</span><span class="o">)</span> where <span class="nv">User</span><span class="o">=</span><span class="s1">&#39;root&#39;</span>;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>4) <strong>Yetkileri yenileyelim;</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mysql&gt; flush privileges;
+</span><span class='line'>mysql&gt; quit
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p><strong>NOT: <code>MySQL</code> kullancı bilgileri <code>mysql</code> database&#8217; inde tutulmaktadır. Step2 de <code>mysql</code> database&#8217; ini seçerek işlemlere devam ettik.</strong></p></blockquote>
+
+<p>İyi çalışmalar&#8230;</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Muhammet DİLEK</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-22T15:10:00+03:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/mysql/'>mysql</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://lab2023.github.com/blog/2012/10/22/mysql-de-kullanici-sifrelerini-degistirme/" data-via="lab2023" data-counturl="http://lab2023.github.com/blog/2012/10/22/mysql-de-kullanici-sifrelerini-degistirme/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/10/22/ubuntu-makine-uzerinde-kullanici-sifrelerini-degistirme/" title="Previous Post: Ubuntu makine üzerinde kullanıcı şifrelerini değiştirme">&laquo; Ubuntu makine üzerinde kullanıcı şifrelerini değiştirme</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/10/22/sunucunun-ssh-portunu-degistirme/" title="Next Post: Sunucunun ssh portunu değiştirme">Sunucunun ssh portunu değiştirme &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/24/octopress-nasil-kullanilir/">Octopress nasıl kullanılır?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/">Rails Projelerinde JQuery Autocomplete Kullanımı</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/25/ruby-on-rails-breadcrumbs-ekmek-kirintisi/">Ruby On Rails Breadcrumbs(Ekmek kırıntısı)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n/">globalize3 ile Çoklu Dil Desteği (I18n)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/21/postgresql-yedek-alma-ve-geri-yukleme/">PostgreSQL Yedek Alma ve Geri Yükleme</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("lab2023", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/lab2023" class="twitter-follow-button" data-show-count="false">Follow @lab2023</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - lab2023 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

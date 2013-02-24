@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ransack | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/ransack/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby On Rails' te Ransack Gem' i ile Arama]]></title>
+    <link href="http://lab2023.github.com/blog/2012/12/16/ruby-on-rails-te-ransack-gem-i-ile-arama/"/>
+    <updated>2012-12-16T17:19:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2012/12/16/ruby-on-rails-te-ransack-gem-i-ile-arama</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/ernie/ransack/"><code>Ransack</code></a> ile kolay bir şekilde arama ve sıralama işlemlerini yapabiliyoruz. <code>Gemfile</code> dosyasına</p>
+
+<p><code>gem 'ransack'</code> satırını ekledikten sonra <code>bundle install</code> ile kuralım.</p>
+
+<p>Arama için <code>search</code> metodunu kullanıyoruz.</p>
+
+<p>```ruby</p>
+
+<blockquote><blockquote><p>Product.search(:name_cont => "aaaa").result.to_sql
+"SELECT <code>products</code>.* FROM <code>products</code>  WHERE (<code>products</code>.<code>name</code> LIKE '%aaaa%')"
+```</p></blockquote></blockquote>
+
+<ul>
+<li>Aynı anda iki alanda arama yapmak istersek <code>or</code> kullanıyoruz.</li>
+</ul>
+
+
+<p>```ruby</p>
+
+<blockquote><blockquote><p>Product.search(:name_or_barcode_cont => "aaaa").result.to_sql
+"SELECT <code>products</code>.* FROM <code>products</code>  WHERE ((<code>products</code>.<code>name</code> LIKE '%aaaa%' OR <code>products</code>.<code>barcode</code> LIKE '%aaaa%'))"
+```</p></blockquote></blockquote>
+
+<!-- more -->
+
+
+<h3>İlişkişli Kayıtlarda Arama Yapmak</h3>
+
+<p>```ruby</p>
+
+<h1>product.rb</h1>
+
+<p>class Product &lt; ActiveRecord::Base</p>
+
+<p>  belongs_to :brand</p>
+
+<p>  has_and_belongs_to_many :keywords</p>
+
+<p>  has_many :custom_products</p>
+
+<p>end
+```</p>
+
+<p>```ruby</p>
+
+<blockquote><blockquote><p>Product.search(:name_or_barcode_or_keywords_name_cont => "aaaa").result.to_sql
+"SELECT <code>products</code>.* FROM <code>products</code> LEFT OUTER JOIN <code>keywords_products</code> ON <code>keywords_products</code>.<code>product_id</code> = <code>products</code>.<code>id</code> LEFT OUTER JOIN <code>keywords</code> ON <code>keywords</code>.<code>id</code> = <code>keywords_products</code>.<code>keyword_id</code> WHERE (((<code>products</code>.<code>name</code> LIKE '%aaaa%' OR <code>products</code>.<code>barcode</code> LIKE '%aaaa%') OR <code>keywords</code>.<code>name</code> LIKE '%aaaa%'))"
+```</p></blockquote></blockquote>
+
+<p>```ruby</p>
+
+<blockquote><blockquote><p>Product.search(:name_or_barcode_or_brand_name_cont => "aaaa").result.to_sql
+"SELECT <code>products</code>.* FROM <code>products</code> LEFT OUTER JOIN <code>brands</code> ON <code>brands</code>.<code>id</code> = <code>products</code>.<code>brand_id</code> WHERE (((<code>products</code>.<code>name</code> LIKE '%aaaa%' OR <code>products</code>.<code>barcode</code> LIKE '%aaaa%') OR <code>brands</code>.<code>name</code> LIKE '%aaaa%'))"
+```</p></blockquote></blockquote>
+
+<p>Tamamda bu sondaki <code>cont</code> ne işe yarıyor ? diye sorular duyar gibi oluyorum. <code>cont</code> <code>Ransack</code> eylemlerinden birisi. Yani nasıl arama yapacağını belirtiyoruz. İçerisinde aaaa geçsin, aaaa ile başlayanler vs. vs. <code>cont</code> içerisinde aaaa geçen kayıtları getiriyor. Diğer <code>Ransack</code> eylemlerini şu linkten incleyebilrsiniz. https://github.com/ernie/ransack/wiki/Basic-Searching</p>
+
+<h3>Controller</h3>
+
+<p><code>ruby
+def index
+  @search = Product.search(params[:q])
+  @products = @search.result
+end
+</code>
+* Arama için varsayılan parametre <code>:q</code>. İstersek değiştirebiliyoruz. https://github.com/ernie/ransack/wiki/Configuration
+* Eğer aram sonuçlarında tekrar eden kayıt istemiyorsak(<code>DISTINCT</code>) <code>:distrinct =&gt; true</code> parametresini geçiyoruz.</p>
+
+<p><code>ruby
+def index
+  @search = Product.search(params[:q])
+  @products = @search.result(:distinct =&gt; true)
+end
+</code></p>
+
+<h3>View</h3>
+
+<p><code>haml
+= search_form_for @search do |f|
+  = f.text_field :name_cont
+  = f.submit "Search", :class =&gt; 'btn'
+</code></p>
+
+<h3>Sıralama</h3>
+
+<p><code>sort_link</code> helper metodunu kullanıyoruz.</p>
+
+<p>```ruby</p>
+
+<h1>product.html.haml</h1>
+
+<p>%table.table.table-striped.table-bordered.table-condensed
+  %tr</p>
+
+<pre><code>%th= sort_link(@search, :name, "İsim")
+%th= sort_link(@search, :barcode, "Barkod")
+%th= sort_link(@search, :sub_category_name, "Kategori")
+</code></pre>
+
+<ul>
+<li>@products.each do |product|
+%tr
+  %td= product.name
+  %td= product.barcode
+  %td= product.sub_category.try(:name)
+```</li>
+</ul>
+
+
+<p><img src="https://dl.dropbox.com/u/44821222/Screen%20Shot%202012-12-16%20at%206.01.31%20PM.png" alt="product" /></p>
+
+<p><img src="https://dl.dropbox.com/u/44821222/Screen%20Shot%202012-12-16%20at%206.01.49%20PM.png" alt="product" /></p>
+
+<p>İyi çalışmalar dilerim.</p>
+]]></content>
+  </entry>
+  
+</feed>

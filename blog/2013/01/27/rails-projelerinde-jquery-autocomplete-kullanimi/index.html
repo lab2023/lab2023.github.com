@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Rails Projelerinde JQuery Autocomplete Kullanımı - lab2023 - internet teknolojileri</title>
+  <meta name="author" content="lab2023">
+
+  
+  <meta name="description" content="Bunun için jQuery UI kütüphanesine ihtiyacımız var. Kütüphaneyi projemize eklemek için jquery-ui-rails gemini kulanacağız. Gemfile dosyasına gemi gem &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://lab2023.github.com/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="lab2023 - internet teknolojileri" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">lab2023 - internet teknolojileri</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:lab2023.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Rails Projelerinde JQuery Autocomplete Kullanımı</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-27T14:43:00+02:00" pubdate data-updated="true">Jan 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Bunun için <a href="http://jqueryui.com/">jQuery UI</a> kütüphanesine ihtiyacımız var. Kütüphaneyi projemize eklemek için <a href="https://github.com/joliss/jquery-ui-rails">jquery-ui-rails</a> gemini kulanacağız. Gemfile dosyasına gemi <code>gem "jquery-ui-rails"</code> ekledikten sonra <code>bundle install</code> komutunu çalıştıralım.
+Javascript kütüphanesini çağırmak için <code>application.js</code> dosyasına</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//= require jquery.ui.autocomplete</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Css kütüphanesini çağırmak için <code>application.css.scss</code> dosyasına</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="c">/*</span>
+</span><span class='line'><span class="c">*= require jquery.ui.autocomplete</span>
+</span><span class='line'><span class="c">*/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>satırlarını ekleyelim.</p>
+
+<!-- more -->
+
+
+<p>Şimdi autocomplete yapılacak olan alanı oluşturalım.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='haml'><span class='line'><span class="p">=</span> <span class="n">f</span><span class="o">.</span><span class="n">text_field</span> <span class="ss">:name_or_country_name_cont</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="s1">&#39;search_zones&#39;</span><span class="p">,</span> <span class="ss">:class</span> <span class="o">=&gt;</span> <span class="s1">&#39;search-query&#39;</span><span class="p">,</span>  <span class="ss">:placeholder</span> <span class="o">=&gt;</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">t</span><span class="p">(</span><span class="s1">&#39;search&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">,</span> <span class="ss">data</span><span class="p">:</span> <span class="p">{</span><span class="n">autocomplete_source</span><span class="p">:</span> <span class="n">auto_admins_zones_path</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>data</code> autocomplete için arama yapacağı yol.</p>
+
+<p>Şimdide bu alana autocomplete özelliği verelim.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//application.js</span>
+</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.search-query&#39;</span><span class="p">).</span><span class="nx">autocomplete</span><span class="p">({</span>
+</span><span class='line'>        <span class="nx">source</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.search-query&#39;</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;autocomplete-source&#39;</span><span class="p">),</span>
+</span><span class='line'>        <span class="nx">messages</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">noResults</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+</span><span class='line'>            <span class="nx">results</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>.search-query</code> clas&#8217; ına sahip alanlara autocomplete özelliği eklemiş olduk. <code>source</code> parametresi ise autocomplete için verilerin yolu. <code>messages</code> parametresi ise ismindende anlaşılacağı gibi mesaj ayarları için. &#8220;1 sonuç bulundu, Hiç sonuç bulunamadı &#8230;&#8221; gibi. Burada hiç bir mesaj döndürmüyor.</p>
+
+<p>Şimdi autocomplete için <code>json</code> veri döndürecek metodu yazalım.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">auto</span>
+</span><span class='line'>    <span class="n">search</span> <span class="o">=</span> <span class="no">Zone</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="ss">:name_or_country_name_start</span> <span class="o">=&gt;</span> <span class="n">params</span><span class="o">[</span><span class="ss">:term</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">zones</span> <span class="o">=</span> <span class="n">search</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="ss">:distinct</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">)</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">render</span> <span class="ss">:json</span> <span class="o">=&gt;</span> <span class="n">zones</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="nb">p</span><span class="o">|</span> <span class="no">Hash</span><span class="o">[</span><span class="nb">id</span><span class="p">:</span> <span class="nb">p</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="ss">label</span><span class="p">:</span> <span class="nb">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="nb">p</span><span class="o">.</span><span class="n">name</span><span class="o">]</span><span class="p">}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Arama işlemlerinde <a href="https://github.com/ernie/ransack">ransack</a> kullanıyorum kafanız karışmasın. Automoplete aranılan veriyi <code>term</code> parametresi olarak gönderiyor.</p>
+
+<p><img src="https://dl.dropbox.com/u/44821222/autocomplete-1.png" alt="Autocomplete" />
+<img src="https://dl.dropbox.com/u/44821222/autocomplete-2.png" alt="Autocomplete" />
+<img src="https://dl.dropbox.com/u/44821222/autocomplete-3.png" alt="Autocomplete" /></p>
+
+<p>Autocomplete için daha detaylı dökümana <a href="http://jqueryui.com/autocomplete/#combobox">buradan</a> ulaşabilirsiniz.</p>
+
+<p>İyi çalışmalar dilerim.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Muhammet DİLEK</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-27T14:43:00+02:00" pubdate data-updated="true">Jan 27<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/autocomplete/'>autocomplete</a>, <a class='category' href='/blog/categories/jquery-ui/'>jquery-ui</a>, <a class='category' href='/blog/categories/ruby-on-rails/'>ruby-on-rails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://lab2023.github.com/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/" data-via="lab2023" data-counturl="http://lab2023.github.com/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/01/25/ruby-on-rails-breadcrumbs-ekmek-kirintisi/" title="Previous Post: Ruby On Rails Breadcrumbs(Ekmek kırıntısı)">&laquo; Ruby On Rails Breadcrumbs(Ekmek kırıntısı)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/02/24/octopress-nasil-kullanilir/" title="Next Post: Octopress nasıl kullanılır?">Octopress nasıl kullanılır? &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/24/octopress-nasil-kullanilir/">Octopress nasıl kullanılır?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/">Rails Projelerinde JQuery Autocomplete Kullanımı</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/25/ruby-on-rails-breadcrumbs-ekmek-kirintisi/">Ruby On Rails Breadcrumbs(Ekmek kırıntısı)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n/">globalize3 ile Çoklu Dil Desteği (I18n)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/21/postgresql-yedek-alma-ve-geri-yukleme/">PostgreSQL Yedek Alma ve Geri Yükleme</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("lab2023", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/lab2023" class="twitter-follow-button" data-show-count="false">Follow @lab2023</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - lab2023 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: paperclip | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/paperclip/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Paperclip: Dosyaları  Yeni Bir Yol (Path)' a Taşımak]]></title>
+    <link href="http://lab2023.github.com/blog/2012/12/19/paperclip-dosyalari-yeni-bir-yol-path-a-tasimak/"/>
+    <updated>2012-12-19T17:08:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2012/12/19/paperclip-dosyalari-yeni-bir-yol-path-a-tasimak</id>
+    <content type="html"><![CDATA[<p>Dosya upload işlemleri için genellikle <a href="https://github.com/thoughtbot/paperclip">Paperclip</a> kulanıyoruz.  Paperclipte <code>:path</code> parametresi ile dosyanın hangi path altına kaydedeliceğini belirtebiliyoruz. <code>Product</code> modelindeki <code>:picture</code> için bir path belirledik. Dosyalar <code>public/system/products/pictures/</code> dizinin altına <code>:style(original, icon, small, large)</code> klasörününde içine <code>"#{id}-#{name.parameterize}.format"</code> olarak kaydedilyor. Linklerde <code>http://localhost:3000/system/products/pictures/original/1-bilgisayar.jpeg</code> şeklinde oluyor. Peki biz bu path' i ürün production' a çıktıktan sonra değiştirirsek ne olur ?. Ne olacak tüm dosya linkleri patlayacak :) Yani eski dosyaları yeni path ile tekrar kaydettirmemiz gerekecek.</p>
+
+<!-- more -->
+
+
+<h3>Önce</h3>
+
+<p>```ruby
+class Product &lt; ActiveRecord::Base
+  has_attached_file :picture,</p>
+
+<pre><code>                :default_url =&gt; "/assets/missing-image.jpg",
+                :styles =&gt; {
+                    :icon =&gt; "20x30#",
+                    :small =&gt; "180x270#",
+                    :large =&gt; "400x600#"
+                },
+                :path =&gt; "public/system/:class/:attachment/:style/:sef_file_name.:extension",
+                :url =&gt; "/system/:class/:attachment/:style/:sef_file_name.:extension"
+</code></pre>
+
+<p>  Paperclip.interpolates :sef_file_name do |attachment, style|</p>
+
+<pre><code>attachment.instance.sef_file_name
+</code></pre>
+
+<p>  end</p>
+
+<p>  def sef_file_name</p>
+
+<pre><code>"#{id}-#{name.parameterize}"
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<h3>Sonra</h3>
+
+<p>```ruby
+class Product &lt; ActiveRecord::Base
+  has_attached_file :picture,</p>
+
+<pre><code>                :default_url =&gt; "/assets/missing-image.jpg",
+                :styles =&gt; {
+                    :icon =&gt; "20x30#",
+                    :small =&gt; "180x270#",
+                    :large =&gt; "400x600#"
+                }
+</code></pre>
+
+<p>end
+````</p>
+
+<blockquote><p>Dosyalar için bir <code>:path</code> belirtmezsek <code>paperclip</code> dosyaları default path ile kaydediyor.</p></blockquote>
+
+<p>Resimler şimdi <code>public/system/products/pictures/000/:id/:style</code> şeklinde kaydediliyor.  Şimdi eski doyaları bu path altına yeniden kaydedelim. Bunun için kısa bir rake yazacağız.</p>
+
+<p>```ruby
+namespace :picture_path do
+  desc "product picture"</p>
+
+<p>  task :product => :environment do</p>
+
+<pre><code>products = Product.where("picture_file_name IS NOT NULL")
+products.each do |p|
+  filename = Rails.root.join('public', 'system', 'products', 'pictures', 'original', "#{p.id}-#{p.name.parameterize}.#{p.picture_file_name.split(".").last}")
+  if File.exists? filename
+    image = File.new filename
+    p.picture = image
+    p.save!
+    image.close
+  end
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p><code>filename</code>' e eski yolu atıyoruz. Eğer böyle bir yol var ise dosyayı yeniden kaydediyoruz. Kaydedilen dosyada yeni path ile kaydediliyor. Eski dosyalar hala duruyor ama.</p>
+
+<p>Son olarakta Rake' i çalıştıralım</p>
+
+<p><code>bash
+rake picture_path:product
+</code></p>
+
+<p>İyi çalışmalar dilerim</p>
+]]></content>
+  </entry>
+  
+</feed>

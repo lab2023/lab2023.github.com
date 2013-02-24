@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: scp | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/scp/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[scp - Sunucuya Dosya Gönderip Alma]]></title>
+    <link href="http://lab2023.github.com/blog/2012/11/01/scp-sunucuya-dosya-gonderip-alma/"/>
+    <updated>2012-11-01T13:06:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2012/11/01/scp-sunucuya-dosya-gonderip-alma</id>
+    <content type="html"><![CDATA[<p>Merhabalar,</p>
+
+<p><code>scp</code> komutunu kullanarak;</p>
+
+<ul>
+<li>Uzak bilgisayar (Sunucu) ile yerel bilgisayar (Locale) arasında</li>
+<li>Uzak bilgisayar ile uzak bilgisayar arasında</li>
+</ul>
+
+
+<p>dosya kopyalama işlemlerini yapabilyoruz.</p>
+
+<!-- more -->
+
+
+<h4>Yerel bilgisayardan den uzak bilgisayara dosya kopyalamak için;</h4>
+
+<p><code>bash
+scp ~/Dropbox/pigonws/_20120731_2255.sql deployer@10.1.2.3:~/apps/backups
+</code></p>
+
+<p>Burada;</p>
+
+<ul>
+<li><p><code>~/Dropbox/pigonws/_20120731_2255.sql</code> : Yerel bilgisayardaki dosyanın yolu.</p></li>
+<li><p><code>deployer@10.1.2.3:~/apps/backups</code> : kullanıcı @ sunucu ip si : sunucudaki yol.</p></li>
+</ul>
+
+
+<p>Komutu çalıştırdıktan sonra ssh ile uzak bilgisayara bağlanıp  yerel bilgisayardaki <code>_20120731_2255.sql</code> dosyasını uzak bilgisayardaki <code>~/apps/backups</code> dizininin altına kopyalıyoruz.</p>
+
+<h4>Uzak bilgisayardan yerel bilgisayara dosya almak için;</h4>
+
+<p><code>bash
+scp deployer@10.1.2.3:~/apps/backups/pigon_production.sql ~/Dropbox/pigonws/
+</code></p>
+
+<h4>Uzak bilgisayardan uzak bilgisayara dosya kopyalamak için;</h4>
+
+<p>Açıkçası bunu hiç denemedim. Şuradaki linkten http://askubuntu.com/questions/153960/scp-with-two-different-ports bakabilrsiniz.</p>
+
+<h3>Parametreler</h3>
+
+<ul>
+<li><code>-P</code> : SSH portunu belirtme.</li>
+<li><code>-q</code> : Progress barı gösterme.</li>
+<li><code>-r</code> : Klasör kopyalayacaksak.</li>
+<li><code>-v</code> : Debug mesajlarını göster.</li>
+</ul>
+
+
+<p>İyi çalışmalar...</p>
+]]></content>
+  </entry>
+  
+</feed>

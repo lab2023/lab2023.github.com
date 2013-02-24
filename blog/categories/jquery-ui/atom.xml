@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: jquery-ui | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/jquery-ui/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Projelerinde JQuery Autocomplete Kullanımı]]></title>
+    <link href="http://lab2023.github.com/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/"/>
+    <updated>2013-01-27T14:43:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi</id>
+    <content type="html"><![CDATA[<p>Bunun için <a href="http://jqueryui.com/">jQuery UI</a> kütüphanesine ihtiyacımız var. Kütüphaneyi projemize eklemek için <a href="https://github.com/joliss/jquery-ui-rails">jquery-ui-rails</a> gemini kulanacağız. Gemfile dosyasına gemi <code>gem "jquery-ui-rails"</code> ekledikten sonra <code>bundle install</code> komutunu çalıştıralım.
+Javascript kütüphanesini çağırmak için <code>application.js</code> dosyasına</p>
+
+<p><code>javascript
+//= require jquery.ui.autocomplete
+</code>
+Css kütüphanesini çağırmak için <code>application.css.scss</code> dosyasına</p>
+
+<p><code>css
+/*
+*= require jquery.ui.autocomplete
+*/
+</code>
+satırlarını ekleyelim.</p>
+
+<!-- more -->
+
+
+<p>Şimdi autocomplete yapılacak olan alanı oluşturalım.</p>
+
+<p><code>haml
+= f.text_field :name_or_country_name_cont, id: 'search_zones', :class =&gt; 'search-query',  :placeholder =&gt; "#{t('search')}...", data: {autocomplete_source: auto_admins_zones_path}
+</code></p>
+
+<p><code>data</code> autocomplete için arama yapacağı yol.</p>
+
+<p>Şimdide bu alana autocomplete özelliği verelim.</p>
+
+<p>```javascript
+//application.js
+$(document).ready(function() {</p>
+
+<pre><code>$('.search-query').autocomplete({
+    source: $('.search-query').data('autocomplete-source'),
+    messages: {
+        noResults: null,
+        results: function() {}
+    }
+});
+</code></pre>
+
+<p>});
+<code>``
+</code>.search-query<code>clas' ına sahip alanlara autocomplete özelliği eklemiş olduk.</code>source<code>parametresi ise autocomplete için verilerin yolu.</code>messages` parametresi ise ismindende anlaşılacağı gibi mesaj ayarları için. "1 sonuç bulundu, Hiç sonuç bulunamadı ..." gibi. Burada hiç bir mesaj döndürmüyor.</p>
+
+<p>Şimdi autocomplete için <code>json</code> veri döndürecek metodu yazalım.</p>
+
+<p>```ruby
+  def auto</p>
+
+<pre><code>search = Zone.search(:name_or_country_name_start =&gt; params[:term])
+zones = search.result(:distinct =&gt; true).limit(10)
+render :json =&gt; zones.map {|p| Hash[id: p.id, label: p.name, name: p.name]}
+</code></pre>
+
+<p>  end
+```</p>
+
+<p>Arama işlemlerinde <a href="https://github.com/ernie/ransack">ransack</a> kullanıyorum kafanız karışmasın. Automoplete aranılan veriyi <code>term</code> parametresi olarak gönderiyor.</p>
+
+<p><img src="https://dl.dropbox.com/u/44821222/autocomplete-1.png" alt="Autocomplete" />
+<img src="https://dl.dropbox.com/u/44821222/autocomplete-2.png" alt="Autocomplete" />
+<img src="https://dl.dropbox.com/u/44821222/autocomplete-3.png" alt="Autocomplete" /></p>
+
+<p>Autocomplete için daha detaylı dökümana <a href="http://jqueryui.com/autocomplete/#combobox">buradan</a> ulaşabilirsiniz.</p>
+
+<p>İyi çalışmalar dilerim.</p>
+]]></content>
+  </entry>
+  
+</feed>

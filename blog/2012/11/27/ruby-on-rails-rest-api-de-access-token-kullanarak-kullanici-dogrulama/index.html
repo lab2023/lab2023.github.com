@@ -1,0 +1,436 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Ruby On Rails REST API'de Access Token Kullanarak Kullanıcı Doğrulama - lab2023 - internet teknolojileri</title>
+  <meta name="author" content="lab2023">
+
+  
+  <meta name="description" content="Öncelikle; HTTPS kullanın. Çünkü HTTP kullanıldığında parametreler plain text olarak iletiliyor. Http Request&#8217; leri dinleyen birisi keylerinize &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://lab2023.github.com/blog/2012/11/27/ruby-on-rails-rest-api-de-access-token-kullanarak-kullanici-dogrulama/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="lab2023 - internet teknolojileri" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">lab2023 - internet teknolojileri</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:lab2023.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Ruby on Rails REST API'de Access Token Kullanarak Kullanıcı Doğrulama</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-27T17:23:00+02:00" pubdate data-updated="true">Nov 27<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Öncelikle;</p>
+
+<ul>
+<li><p><code>HTTPS</code> kullanın. Çünkü <code>HTTP</code> kullanıldığında  parametreler plain text olarak iletiliyor. <code>Http Request</code>&#8217; leri dinleyen birisi keylerinize çok rahat ulaşabilir.</p></li>
+<li><p><code>access_token</code>&#8217; ları url den parametre olarak almak yerine <code>Http Header</code>&#8217; dan almak daha uygundur. Çünkü kullanıcı alışkanlıkları  (kopyala-yapıştır-test et) yönündedir. URL de unutulan tokenlar güvenlik için tehlikeli olabilir.</p></li>
+</ul>
+
+
+<p>Kullanıcı doğrulama ile ilgili daha önce yazdığım <a href="http://muhammetdilek.dudupress.com/articles/ruby-on-rails-rest-api-de-http-basic-authentication-kullanarak-kullanici-dogrulama">Ruby On Rails REST API&#8217; de HTTP Basic Authentication Kullanarak Kullanıcı Doğrulama
+</a> yazısını okuyabilirsiniz.</p>
+
+<!-- more -->
+
+
+<p><code>API</code>&#8217; de güvenliği sağlamanın diğer bir yolu ise <code>API</code>&#8217; yi kullanacak client&#8217; lara bir <code>API_KEY</code> verip o <code>API_KEY</code> ile authenticate yapmak. Bu yöntemi kullanırsak <code>API_KEY</code> leri saklamak için bir modele ihtiyacımız olacak.
+Bu modelde;</p>
+
+<ul>
+<li><code>user_id</code></li>
+<li><code>access_token</code></li>
+<li><code>expires_at</code>
+alanlarını tutacağız. Eğer <code>API_KEY</code> ömrünü kısıtlamak istemiyorsanız <code>expires_at</code> alanına ihtiyacınız yok.</li>
+</ul>
+
+
+<p>Ben burada örneği kısa tutmak için <code>user_id</code> ve <code>expires_at</code> alanlarını kullanmayacağım.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Muhammets-iMac:pigon muhammetdilek<span class="nv">$ </span>rails g model api_key access_token:string
+</span><span class='line'>      invoke  active_record
+</span><span class='line'>      create    db/migrate/20121006130334_create_api_keys.rb
+</span><span class='line'>      create    app/models/api_key.rb
+</span><span class='line'>      invoke    test_unit
+</span><span class='line'>      create      <span class="nb">test</span>/unit/api_key_test.rb
+</span><span class='line'>      create      <span class="nb">test</span>/fixtures/api_keys.yml
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApiKey</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">before_create</span> <span class="ss">:generate_access_token</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">generate_access_token</span>
+</span><span class='line'>    <span class="k">begin</span>
+</span><span class='line'>      <span class="nb">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="no">SecureRandom</span><span class="o">.</span><span class="n">hex</span>
+</span><span class='line'>    <span class="k">end</span> <span class="k">while</span> <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="n">access_token</span><span class="p">:</span> <span class="n">access_token</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Burada <code>access_token</code> üretmek için <code>ruby 1.9</code>&#8217; la gelen <code>SecureRandom.hex</code> metodunu kullanarak 16 haneden oluşan <code>string</code> bir <code>access_token</code> oluşturuyoruz. Eğer oluşturulan bu <code>access_token</code> daha önceden oluşturulmuş ise kod daha önceden oluşturulmayan bir <code>access_token</code> üretinceye kadar tekrar çalışıyor.</p>
+
+<p>Şimdi bir ApiKey oluşturup devam edelim.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Muhammets-iMac:pigon muhammetdilek<span class="nv">$ </span>rails c
+</span><span class='line'>Loading development environment <span class="o">(</span>Rails 3.2.8<span class="o">)</span>
+</span><span class='line'>1.9.3p194 :001 &gt; ApiKey.create
+</span><span class='line'>   <span class="o">(</span>0.0ms<span class="o">)</span>  begin transaction
+</span><span class='line'>  ApiKey Exists <span class="o">(</span>0.1ms<span class="o">)</span>  SELECT 1 AS one FROM <span class="s2">&quot;api_keys&quot;</span> WHERE <span class="s2">&quot;api_keys&quot;</span>.<span class="s2">&quot;access_token&quot;</span> <span class="o">=</span> <span class="s1">&#39;765582c8bf829e682abe70618957a42a&#39;</span> LIMIT 1
+</span><span class='line'>Binary data inserted <span class="k">for</span> <span class="sb">`</span>string<span class="sb">`</span> <span class="nb">type </span>on column <span class="sb">`</span>access_token<span class="sb">`</span>
+</span><span class='line'>  SQL <span class="o">(</span>35.5ms<span class="o">)</span>  INSERT INTO <span class="s2">&quot;api_keys&quot;</span> <span class="o">(</span><span class="s2">&quot;access_token&quot;</span>, <span class="s2">&quot;created_at&quot;</span>, <span class="s2">&quot;updated_at&quot;</span><span class="o">)</span> VALUES <span class="o">(</span>?, ?, ?<span class="o">)</span>  <span class="o">[[</span><span class="s2">&quot;access_token&quot;</span>, <span class="s2">&quot;765582c8bf829e682abe70618957a42a&quot;</span><span class="o">]</span>, <span class="o">[</span><span class="s2">&quot;created_at&quot;</span>, Sat, 06 Oct 2012 13:11:59 UTC +00:00<span class="o">]</span>, <span class="o">[</span><span class="s2">&quot;updated_at&quot;</span>, Sat, 06 Oct 2012 13:11:59 UTC +00:00<span class="o">]]</span>
+</span><span class='line'>   <span class="o">(</span>2.0ms<span class="o">)</span>  commit <span class="nv">transaction</span>
+</span><span class='line'> <span class="o">=</span>&gt; <span class="c">#&lt;ApiKey id: 1, access_token: &quot;765582c8bf829e682abe70618957a42a&quot;, created_at: &quot;2012-10-06 13:11:59&quot;, updated_at: &quot;2012-10-06 13:11:59&quot;&gt; </span>
+</span><span class='line'>1.9.3p194 :002 &gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>Controller</code>&#8217; a <code>access_token</code> kontrolü yapan bir metod yazacağız;</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Api</span>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">V2</span>
+</span><span class='line'>    <span class="k">class</span> <span class="nc">ProductsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>      <span class="kp">include</span> <span class="ss">ActionController</span><span class="p">:</span><span class="ss">:MimeResponds</span>
+</span><span class='line'>      <span class="kp">include</span> <span class="ss">ActionController</span><span class="p">:</span><span class="ss">:HttpAuthentication</span><span class="o">::</span><span class="ss">Basic</span><span class="p">:</span><span class="ss">:ControllerMethods</span>
+</span><span class='line'>      <span class="c1">#http_basic_authenticate_with name: &#39;admin&#39;, password: &#39;secret&#39;</span>
+</span><span class='line'>      <span class="n">before_filter</span> <span class="ss">:restrict_access</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">respond_to</span> <span class="ss">:json</span><span class="p">,</span> <span class="ss">:xml</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="c1">#Actions</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">restrict_access</span>
+</span><span class='line'>        <span class="n">api_key</span> <span class="o">=</span> <span class="no">ApiKey</span><span class="o">.</span><span class="n">find_by_access_token</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:access_token</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">head</span> <span class="ss">:unauthorized</span> <span class="k">unless</span> <span class="n">api_key</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>http://pigon.dev/api/products</code> adresini açtığımızda bize hiçbir datanın dönmediğini görüyoruz. Birde query olarak <code>access_token</code> ekleyerek bakalım;
+<img src="https://dl.dropbox.com/u/44821222/access-token.png" alt="API_KEY" />
+Evet gördüğünüz gibi urlden <code>acces_token</code> alarak datalara erişim kısıtlaması getirebiliyoruz. <code>access_token</code>&#8217; bilgilisini <code>URL</code>&#8217; den almak yerine <code>HTTP Header</code> dan alalım.</p>
+
+<p><code>Rails</code>&#8217; te <code>HTTP header</code>&#8217; dan <code>access_token</code> almak için <code>authenticate_or_request_with_http_token</code> metodunu kullancağız.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">restrict_access</span>
+</span><span class='line'>  <span class="c1">#api_key = ApiKey.find_by_access_token(params[:access_token])</span>
+</span><span class='line'>  <span class="c1">#head :unauthorized unless api_key</span>
+</span><span class='line'>  <span class="n">authenticate_or_request_with_http_token</span> <span class="k">do</span> <span class="o">|</span><span class="n">token</span><span class="p">,</span> <span class="n">options</span><span class="o">|</span>
+</span><span class='line'>    <span class="no">ApiKey</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="n">access_token</span><span class="p">:</span> <span class="n">token</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Eğer <a href="https://github.com/rails-api/rails-api"><code>Rails::API</code></a> gem&#8217; ini kullanıyorsak <code>ActionController::HttpAuthentication::Token::ControllerMethods</code> modülünü <code>Controller</code>&#8217; a eklememiz gerekiyor.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Muhammets-iMac:pigon muhammetdilek<span class="nv">$ </span>curl http://pigon.dev/api/products -H <span class="s1">&#39;Authorization: Token token=&quot;xyz&quot;&#39;</span>
+</span><span class='line'>HTTP Token: Access denied.
+</span><span class='line'>Muhammets-iMac:pigon muhammetdilek<span class="nv">$ </span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Muhammets-iMac:pigon muhammetdilek<span class="nv">$ </span>curl http://pigon.dev/api/products -H <span class="s1">&#39;Authorization: Token token=&quot;765582c8bf829e682abe70618957a42a&quot;&#39;</span>
+</span><span class='line'><span class="o">[{</span><span class="s2">&quot;amount&quot;</span>:<span class="s2">&quot;4.3&quot;</span>,<span class="s2">&quot;created_at&quot;</span>:<span class="s2">&quot;2012-10-06T09:58:47Z&quot;</span>,<span class="s2">&quot;id&quot;</span>:2,<span class="s2">&quot;title&quot;</span>:<span class="s2">&quot;Product2&quot;</span>,<span class="s2">&quot;updated_at&quot;</span>:<span class="s2">&quot;2012-10-06T09:58:47Z&quot;</span><span class="o">}</span>,<span class="o">{</span><span class="s2">&quot;amount&quot;</span>:<span class="s2">&quot;15.0&quot;</span>,<span class="s2">&quot;created_at&quot;</span>:<span class="s2">&quot;2012-10-06T09:59:14Z&quot;</span>,<span class="s2">&quot;id&quot;</span>:3,<span class="s2">&quot;title&quot;</span>:<span class="s2">&quot;Product3Update&quot;</span>,<span class="s2">&quot;updated_at&quot;</span>:<span class="s2">&quot;2012-10-06T09:59:24Z&quot;</span><span class="o">}]</span>Muhammets-iMac:pigon muhammetdilek<span class="nv">$ </span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Komut satırından baktığımızda kodlarımızın çalıştığını görüyoruz.</p>
+
+<p>İyi çalışmalar.</p>
+
+<p>Kaynak: <a href="http://railscasts.com/episodes/352-securing-an-api">RailsCasts</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Muhammet DİLEK</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-27T17:23:00+02:00" pubdate data-updated="true">Nov 27<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/api/'>api</a>, <a class='category' href='/blog/categories/authentication/'>authentication</a>, <a class='category' href='/blog/categories/authorization/'>authorization</a>, <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/rails-api/'>rails-api</a>, <a class='category' href='/blog/categories/ruby-on-rails/'>ruby-on-rails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://lab2023.github.com/blog/2012/11/27/ruby-on-rails-rest-api-de-access-token-kullanarak-kullanici-dogrulama/" data-via="lab2023" data-counturl="http://lab2023.github.com/blog/2012/11/27/ruby-on-rails-rest-api-de-access-token-kullanarak-kullanici-dogrulama/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/11/24/ruby-on-rails-ile-rails-api-gem-ini-kullanarak-api-gelistirme/" title="Previous Post: Ruby On Rails ile Rails::API Gem'ini Kullanarak API Geliştirme">&laquo; Ruby On Rails ile Rails::API Gem'ini Kullanarak API Geliştirme</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/12/07/ruby-on-rails-te-excel-export/" title="Next Post: Ruby on Rails'te Excel Export">Ruby on Rails'te Excel Export &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/24/octopress-nasil-kullanilir/">Octopress nasıl kullanılır?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/">Rails Projelerinde JQuery Autocomplete Kullanımı</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/25/ruby-on-rails-breadcrumbs-ekmek-kirintisi/">Ruby On Rails Breadcrumbs(Ekmek kırıntısı)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n/">globalize3 ile Çoklu Dil Desteği (I18n)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/21/postgresql-yedek-alma-ve-geri-yukleme/">PostgreSQL Yedek Alma ve Geri Yükleme</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("lab2023", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/lab2023" class="twitter-follow-button" data-show-count="false">Follow @lab2023</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - lab2023 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

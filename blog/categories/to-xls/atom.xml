@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: to_xls | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/to-xls/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby on Rails'te Excel Export]]></title>
+    <link href="http://lab2023.github.com/blog/2012/12/07/ruby-on-rails-te-excel-export/"/>
+    <updated>2012-12-07T17:21:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2012/12/07/ruby-on-rails-te-excel-export</id>
+    <content type="html"><![CDATA[<p>Excel export işlemlerinde <a href="https://github.com/splendeo/to_xls"><code>to_xls</code></a> gemini kullanıyoruz. Export edilen excel dosyaları <code>xls</code> uzantısında oluyor.</p>
+
+<p>Excel renderlermek için <code>config/initializers/mime_types.rb</code> doyasına mime type eklemeyi unutmuyalım.</p>
+
+<p><code>ruby
+Mime::Type.register "application/vnd.ms-excel", :xls
+</code></p>
+
+<p>Gemfile dosyasına <code>gem 'to_xls'</code> ekleyip <code>bundle install</code> ile kuruyoruz.</p>
+
+<!-- more -->
+
+
+<h3>Kullanımı</h3>
+
+<p>```ruby
+class UserController &lt; ApplicationController</p>
+
+<p>  def index</p>
+
+<pre><code>@users = User.all
+
+respond_to do |format|
+  format.html
+  format.xml { render :xml =&gt; @users }
+  format.xls { send_data @users.to_xls, :filename =&gt; 'users.xls' }
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p><code>@users</code> koleksiyonu içindeki ilk itemin propertilerine göre <code>@users</code> koleksiyonunu export eder. Properti ismileri kolon başlığı olarak kabul edilir.</p>
+
+<p>Eğer kolonlara başlık vermek istemiyorsak <code>:headers =&gt; false</code> parametresini geçiyoruz.</p>
+
+<p><code>ruby
+@users.to_xls(:headers =&gt; false)
+</code>
+Sheet ismini belirtmek istiyorsak <code>:name =&gt; "Users"</code> parametresini geçiyoruz. Varsayılanı Sheet1</p>
+
+<p><code>ruby
+@users.to_xls(:name =&gt; "Users")
+</code></p>
+
+<p>Propertilerin hepsini değilde seçtiklerimizi export etmek istersek <code>:columns</code> parametresi ile bunu belirtebilyoruz.</p>
+
+<p><code>ruby
+@users.to_xls(:columns =&gt; [:name, :role])
+</code></p>
+
+<p>Bu kolonların isimlerini değiştirmek istersek <code>:headers</code> parametresini kullanıyoruz.</p>
+
+<p><code>ruby
+@users.to_xls(:columns =&gt; [:name, :role], :headers =&gt; ['İsim', 'Rol'])
+</code></p>
+
+<p>Peki ilişkili kayıtlarıda export edebiliyor muyuz ? Evet ilişkili kayıtlarıda export edebiliyoruz.</p>
+
+<p><code>ruby
+@users.to_xls(:columns =&gt; [:name, {:company =&gt; [:name, :address]}])
+</code>
+<code>company</code> modelindeki <code>:name</code> ve <code>:address</code> propertilerini aldık.</p>
+
+<p>Böyle export edince kolon isimlerini company_name , company_address şeklinde oluşturacaktır. Kolon isimlerini değiştirmek için yine <code>:headers</code> parametresini kullanabiliriz.</p>
+
+<p><code>ruby
+@users.to_xls(:columns =&gt; [:name, {:company =&gt; [:name, :address]}], :headers =&gt; ['Name', 'Company', 'Address'])
+</code></p>
+
+<p>İyi çalışmalar dilerim...</p>
+]]></content>
+  </entry>
+  
+</feed>

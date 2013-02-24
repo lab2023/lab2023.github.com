@@ -1,0 +1,566 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Ruby On Rails Application Template Oluşturma - lab2023 - internet teknolojileri</title>
+  <meta name="author" content="lab2023">
+
+  
+  <meta name="description" content="Template nedir ? Yeni bir rails uygulaması oluştururken genel görevleri otomatikleştirmek için yardımcı ruby script. Örneğin her rails projesinde &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://lab2023.github.com/blog/2012/12/23/ruby-on-rails-application-template-olusturma/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="lab2023 - internet teknolojileri" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">lab2023 - internet teknolojileri</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:lab2023.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Ruby on Rails Application Template Oluşturma</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-23T17:00:00+02:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>Template nedir ?</h3>
+
+<p>Yeni bir <code>rails</code> uygulaması oluştururken genel görevleri otomatikleştirmek için yardımcı <code>ruby</code> script. Örneğin her <code>rails</code> projesinde <code>devise</code> gemini kullanıyorsak bunu her seferinde eklemek yerine template&#8217; e ekleyip aynı işlemleri tekrarlamaktan kurtulabiliriz.</p>
+
+<h3>Template Oluşturma</h3>
+
+<p>Template oluşturmak için ne bir <code>generator</code> nede bir <code>gem</code> kullancağız. İçerisine bazı metodlar yazabileceğimiz bir <code>ruby</code> dosyası yeterli :)</p>
+
+<!-- more -->
+
+
+<h3>Template Kullanımı</h3>
+
+<p>Yeni bir uygulama oluştururken <code>-m</code> parametresinden sonra template yolunu yazıyoruz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>rails new blog -m ~/template.rb
+</span><span class='line'><span class="nv">$ </span>rails new APP_NAME -m https://raw.github.com/lab2023/rails-template/master/rails_template.rb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Yada <code>rails:tempalte</code> rake&#8217; ini kullanabiliriz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>rake rails:template <span class="nv">LOCATION</span><span class="o">=</span>~/template.rb
+</span><span class='line'><span class="nv">$ </span>rake rails:template <span class="nv">LOCATION</span><span class="o">=</span>http://example.com/template.rb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Template metodları:</h3>
+
+<h4>gem(name, options = {})</h4>
+
+<p><code>gem</code> metodu Gemfile dosyasın gem eklenmesini sağlıyor.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;will_paginate&#39;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;bootstrap-will_paginate&#39;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s2">&quot;will-paginate-i18n&quot;</span><span class="p">,</span> <span class="s2">&quot;~&gt; 0.1.7&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>NOT: <code>gem</code> metodu gemi ekliyor ama kurmuyor. Yani biz gemleri ekledikten sonra <code>bundle install</code> metodunu çalıştırmalıyız.</p></blockquote>
+
+<h4>gem_group(*names, &amp;block)</h4>
+
+<p>Grup içerisine gem yazmamızı sağlar.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="ss">:assets</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;bootstrap-sass&quot;</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;compass-rails&quot;</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;jquery-ui-rails&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>add_source(source, options = {})</h4>
+
+<p>Gemler için source eklememizi sağlar.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">add_source</span> <span class="s2">&quot;http://code.whytheluckystiff.net&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>initializer(filename, data = nil, &amp;block)</h4>
+
+<p><code>config/initializers</code> klasörü altına  initializer dosyası eklememizi sağlar.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">initializer</span> <span class="s1">&#39;resque_mailer.rb&#39;</span><span class="p">,</span> <span class="o">&lt;&lt;-</span><span class="no">CODE</span>
+</span><span class='line'><span class="sh">class AsyncMailer &lt; ActionMailer::Base</span>
+</span><span class='line'><span class="sh">  include Resque::Mailer</span>
+</span><span class='line'><span class="sh">  layout &#39;email&#39;</span>
+</span><span class='line'><span class="sh">end</span>
+</span><span class='line'><span class="no">CODE</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>rakefile(filename, data = nil, &amp;block)</h4>
+
+<p><code>lib/tasks</code> altına rake oluşturuyor</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rakefile</span><span class="p">(</span><span class="s2">&quot;bootstrap.rake&quot;</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>  <span class="o">&lt;&lt;-</span><span class="no">TASK</span>
+</span><span class='line'><span class="sh">    require &quot;resque/tasks&quot;</span>
+</span><span class='line'><span class="sh">    task &quot;resque:setup&quot; =&gt; :environment</span>
+</span><span class='line'><span class="no">  TASK</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>generate(what, args)</h4>
+
+<p><code>generate</code> metodu <code>rails generator</code>&#8217; lerini çalıştırmamızı sağlıyor.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">generate</span><span class="p">(</span><span class="ss">:scaffold</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;name:string&quot;</span><span class="p">,</span> <span class="s2">&quot;address:text&quot;</span><span class="p">,</span> <span class="s2">&quot;age:number&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">generate</span> <span class="s1">&#39;simple_form:install --bootstrap&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>run(command, config={})</h4>
+
+<p><code>run</code> metodu ismindende anlaşılcağı gibi sistem komutlarını çalıştırmaya yarıyor.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">run</span> <span class="s1">&#39;bundle install&#39;</span> <span class="c1"># bundle install komutunu çalıştırıyor</span>
+</span><span class='line'><span class="n">run</span> <span class="s1">&#39;touch README.md&#39;</span> <span class="c1"># README.md isminde dosya oluturyor</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>rake(command, options = {})</h4>
+
+<p><code>rake</code> çalıştırmamızı sağlıyor.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rake</span> <span class="s1">&#39;db:drop&#39;</span>
+</span><span class='line'><span class="n">rake</span> <span class="s1">&#39;db:create&#39;</span>
+</span><span class='line'><span class="n">rake</span> <span class="s1">&#39;db:migrate&#39;</span>
+</span><span class='line'><span class="n">rake</span> <span class="s2">&quot;db:migrate&quot;</span><span class="p">,</span> <span class="ss">:env</span> <span class="o">=&gt;</span> <span class="s1">&#39;production&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>route(routing_code)</h4>
+
+<p>Route <code>config/routes.rb</code> dosyasına routing entry eklememizi sağlar.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">route</span> <span class="s2">&quot;root to: &#39;person#index&#39;&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>inside(dir)</h4>
+
+<p>Klasör içerinde komut çalıştırmamıza yarar.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;https://raw.github.com/lab2023/rails-template/master/files/&quot;</span>
+</span><span class='line'><span class="n">inside</span> <span class="s1">&#39;app/views/devise&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">get</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;app/views/devise/confirmations/new.html.haml&#39;</span><span class="p">,</span> <span class="s1">&#39;confirmations/new.html.haml&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>ask(question)</h4>
+
+<p>Kullanıcıdan bilgi alınmasını sağlar.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">lib_name</span> <span class="o">=</span> <span class="n">ask</span><span class="p">(</span><span class="s2">&quot;What do you want to call the shiny library ?&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">lib_name</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;.rb&quot;</span> <span class="k">unless</span> <span class="n">lib_name</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;.rb&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">lib</span> <span class="n">lib_name</span><span class="p">,</span> <span class="o">&lt;&lt;-</span><span class="no">CODE</span>
+</span><span class='line'><span class="sh">class Shiny</span>
+</span><span class='line'><span class="sh">end</span>
+</span><span class='line'><span class="no">CODE</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>yes?(question) or no?(question)</h4>
+
+<p>Kullanıcya soru sormamızı sağlarlar.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">if</span> <span class="n">yes?</span><span class="p">(</span><span class="s1">&#39;Would you like to use the Sphinx search system? (yes/no)&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">sphinx_flag</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>  <span class="n">sphinx_flag</span> <span class="o">=</span> <span class="kp">false</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>git(:command)</h4>
+
+<p>Git komutlarını kullanmamızı sağlıyor.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">git</span> <span class="ss">:init</span>
+</span><span class='line'><span class="n">git</span> <span class="ss">:add</span> <span class="o">=&gt;</span> <span class="s1">&#39;.&#39;</span>
+</span><span class='line'><span class="n">git</span> <span class="ss">:commit</span> <span class="o">=&gt;</span> <span class="s1">&#39;-m &quot;Issue #1 Install Rails &quot;&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>create_file(destination, data=nil, config={}, &amp;block)</h4>
+
+<p><code>create_file</code> metodu yeni bir dosya oluşturur.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">create_file</span> <span class="s1">&#39;lib/tasks/resque.rake&#39;</span><span class="p">,</span> <span class="o">&lt;&lt;-</span><span class="no">CODE</span>
+</span><span class='line'><span class="sh">require &quot;resque/tasks&quot;</span>
+</span><span class='line'><span class="sh">task &quot;resque:setup&quot; =&gt; :environment</span>
+</span><span class='line'><span class="no">CODE</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>gsub_file(path, flag, *args, &amp;block)</h4>
+
+<p>Dosya içerisinde text değiştirmemizi sağlar. <code>flag</code> parametresi string ve regex bir ifade olabilir.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gsub_file</span> <span class="s1">&#39;config/application.rb&#39;</span><span class="p">,</span> <span class="sr">/:password/</span><span class="p">,</span> <span class="s1">&#39;:password, :password_confirmation&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>remove_file(path, config={})</h4>
+
+<p>Dosya siler.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">remove_file</span> <span class="s1">&#39;app/models/user.rb&#39;</span>
+</span><span class='line'><span class="n">remove_file</span> <span class="s1">&#39;app/models/admin.rb&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>inject_into_file(destination, *args, &amp;block)</h4>
+
+<p>Dosya içerisine text eklememeizi sağlar. <code>:after</code> ve <code>:before</code> parametreleri ile nereye ekleme yapılacağını belirtebiliriz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">inject_into_file</span> <span class="s1">&#39;app/controllers/pages_controller.rb&#39;</span><span class="p">,</span> <span class="ss">:before</span> <span class="o">=&gt;</span> <span class="s1">&#39;end&#39;</span> <span class="k">do</span> <span class="o">&lt;&lt;-</span><span class="no">RUBY</span>
+</span><span class='line'><span class="sh">skip_before_filter :authenticate_user!, :only =&gt; :index</span>
+</span><span class='line'>
+</span><span class='line'><span class="sh">def index</span>
+</span><span class='line'>
+</span><span class='line'><span class="sh">end</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="no">RUBY</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>append_file(path, *args, &amp;block)</h4>
+
+<p>Dosyaya text eklememizi sağlar.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">append_file</span> <span class="s1">&#39;.gitignore&#39;</span> <span class="k">do</span> <span class="o">&lt;&lt;-</span><span class="no">FILE</span>
+</span><span class='line'><span class="sh">.idea</span>
+</span><span class='line'><span class="sh">.idea/**/*</span>
+</span><span class='line'><span class="no">FILE</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>get(source, destination=nil, config={}, &amp;block)</h4>
+
+<p>Verilen adresteki içeriği alır ve hedef kaynağa yerleştirir. Yani hedef doyaya yazar.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;https://raw.github.com/lab2023/rails-template/master/files/&quot;</span>
+</span><span class='line'><span class="n">get</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;app/controllers/admins/application_controller.rb&#39;</span><span class="p">,</span> <span class="s1">&#39;app/controllers/admins/application_controller.rb&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Genel olarak sık kullandığımız metodları yazamaya çalıştım. Aşağıdaki linklerden daha fazla kaynağa ulşabilirsiniz. Dilerseniz <a href="https://github.com/lab2023/rails-template">lab2023 rails temaplate</a>&#8217; i inceleyebilrsiniz.</p>
+
+<p>Kaynaklar:
+http://guides.rubyonrails.org/rails_application_templates.html
+https://github.com/wycats/thor/wiki/Actions
+http://textmate.rubyforge.org/thor/Thor/Actions.html
+http://rdoc.info/github/wycats/thor/master/Thor/Actions</p>
+
+<p>İyi çalışmalar&#8230;</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Muhammet DİLEK</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-23T17:00:00+02:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/application-template/'>application-template</a>, <a class='category' href='/blog/categories/ruby-on-rails/'>ruby-on-rails</a>, <a class='category' href='/blog/categories/template/'>template</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://lab2023.github.com/blog/2012/12/23/ruby-on-rails-application-template-olusturma/" data-via="lab2023" data-counturl="http://lab2023.github.com/blog/2012/12/23/ruby-on-rails-application-template-olusturma/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/12/20/deploy-islemleri-checklist-im/" title="Previous Post: Deploy İşlemleri Checklist'im">&laquo; Deploy İşlemleri Checklist'im</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/01/21/postgresql-yedek-alma-ve-geri-yukleme/" title="Next Post: PostgreSQL Yedek Alma ve Geri Yükleme">PostgreSQL Yedek Alma ve Geri Yükleme &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/24/octopress-nasil-kullanilir/">Octopress nasıl kullanılır?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/">Rails Projelerinde JQuery Autocomplete Kullanımı</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/25/ruby-on-rails-breadcrumbs-ekmek-kirintisi/">Ruby On Rails Breadcrumbs(Ekmek kırıntısı)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n/">globalize3 ile Çoklu Dil Desteği (I18n)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/21/postgresql-yedek-alma-ve-geri-yukleme/">PostgreSQL Yedek Alma ve Geri Yükleme</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("lab2023", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/lab2023" class="twitter-follow-button" data-show-count="false">Follow @lab2023</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - lab2023 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

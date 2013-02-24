@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>API nedir ? - lab2023 - internet teknolojileri</title>
+  <meta name="author" content="lab2023">
+
+  
+  <meta name="description" content="Application Programming Interface kelimelerinin kısaltılmış halidir. Application Programming Interface&#8217; i açıklayacak olursak; Uygulama &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://lab2023.github.com/blog/2012/10/05/api-nedir/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="lab2023 - internet teknolojileri" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">lab2023 - internet teknolojileri</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:lab2023.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">API Nedir ?</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-05T14:57:00+03:00" pubdate data-updated="true">Oct 5<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><code>Application Programming Interface</code> kelimelerinin kısaltılmış halidir. <code>Application Programming Interface</code>&#8217; i açıklayacak olursak; Uygulama Geliştirme Arayüzü demektir. Buradaki <code>Arayüz</code> olarak çevirdiğimiz <code>Interface</code> kavramı kafamızı karıştırmasın. <code>Interface</code> Object-oriented programlamada kullanıdığımız <code>Interface Class</code>&#8217; ının tanımıyla aynıdır. <code>Interface Class</code>&#8217; lar kendini kullanacak alt <code>class</code> lara ; <em><strong>&#8220;Eğer sen beni kullanacaksan benim bazı metodlarım var. Sende onları kendi içinde tanımlayacaksın ve argumanları şu şu olacak</strong>&#8221;</em> diyerek kendi belirledikleri kuralları zorunlu hale getirirler. <code>API</code> kelimesinde geçen <code>Interface</code> kelimeside buradaki ile aynı anlamı taşımaktadırlar. Konuyu daha iyi anlamak için <code>Interface Class</code> larını incelemnizde fayda var diye düşünüyorum.</p>
+
+<p><code>Interface</code> kavramına fazla takılmadan konumuza devam edelim.</p>
+
+<!-- more -->
+
+
+<p><code>API</code>&#8217; yi <em><strong>&#8220;Geliştirilen bir uygulamanın kodları açılmamak şartıyla başka programcılar tarafından kendi uygulamalarında kullanılabilmesine olanak sağlayan teknoloji&#8221;</strong></em> olarak tanımlayabiliriz. Burada altını çizmek istediğim noktalar var.</p>
+
+<ul>
+<li><p><code>kodları açılmamak şartıyla</code>; evet arkadaşlar başka bir geliştiricinin yazdığı uygulamanın kodlarını görmeden o uygulamayı kendi uygulamanızda kullanabiliyorsak bize bu imkanı sağlayan teknoloji <code>API</code>&#8217; dir.</p></li>
+<li><p>Bir diğer nokta ise <code>farklı programcılar</code>; aslında burada <code>farklı platformlar</code> desek daha uygun olacak. <code>API</code> sini kullandığımız uygulamanın hangi platformda yazıldığı bizi hiç ilgilendirmiyor. Biz sadece o uygulamanın <code>API</code> sinin bize sunduğu şeylerle ilgileniyoruz.</p></li>
+</ul>
+
+
+<p>Basit bir örnek verecek olursak;</p>
+
+<p>Nüfus ve Vatandaşlık İşleri Genel Müdürlüğünün tc kimlik no doğrulama <a href="https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx?op=TCKimlikNoDogrula">servisi</a> var. Ben bir programcı olarak bunu <code>ruby</code> ile geliştirdiğim bir uygulamamda uygulamama üye olan kullanıcıların gerçek olup olmadığını kontrol etmek için kullanmak istiyorum. Servisin <a href="https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx?op=TCKimlikNoDogrula">döküman sayfasına</a> gidip nasıl kullanılacağına bakıyorum. Sonrada bunu <code>ruby</code>&#8217; de nasıl kullanabilirm diye araştırıp, öğrenip uygulamama entegre ediyorum. İşte bu kadar :)</p>
+
+<p>Günümüzde popüler birçok uygulamanın <code>API</code>&#8217; ye sahip olduklarını görüyoruz. <a href="https://dev.twitter.com/">Twitter</a>,  <a href="http://developer.github.com/">Github</a>, <a href="https://developers.facebook.com/">Facebook</a>&#8230; Daha iyi anlamak için bu <code>API</code>leri inceleyebilirsiniz.</p>
+
+<p>İyi çalışmalar</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Muhammet DİLEK</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-05T14:57:00+03:00" pubdate data-updated="true">Oct 5<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/api/'>api</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://lab2023.github.com/blog/2012/10/05/api-nedir/" data-via="lab2023" data-counturl="http://lab2023.github.com/blog/2012/10/05/api-nedir/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/04/09/ruby-de-degiskenler-ve-veri-turleri/" title="Previous Post: Ruby’ de Değişkenler ve Veri Türleri">&laquo; Ruby’ de Değişkenler ve Veri Türleri</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/10/06/ruby-on-rails-rest-apide-http-basic-authentication-kullanarak-kullanici-dogrulama/" title="Next Post: Ruby On Rails REST API'de HTTP Basic Authentication Kullanarak Kullanıcı Doğrulama">Ruby On Rails REST API'de HTTP Basic Authentication Kullanarak Kullanıcı Doğrulama &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/24/octopress-nasil-kullanilir/">Octopress nasıl kullanılır?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/">Rails Projelerinde JQuery Autocomplete Kullanımı</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/25/ruby-on-rails-breadcrumbs-ekmek-kirintisi/">Ruby On Rails Breadcrumbs(Ekmek kırıntısı)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n/">globalize3 ile Çoklu Dil Desteği (I18n)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/21/postgresql-yedek-alma-ve-geri-yukleme/">PostgreSQL Yedek Alma ve Geri Yükleme</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("lab2023", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/lab2023" class="twitter-follow-button" data-show-count="false">Follow @lab2023</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - lab2023 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

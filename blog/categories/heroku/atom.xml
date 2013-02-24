@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Heroku | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/heroku/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Projelerinde Heroku Scheduler Kullanımı]]></title>
+    <link href="http://lab2023.github.com/blog/2012/03/31/rails-projelerinde-heroku-scheduler-kullanimi/"/>
+    <updated>2012-03-31T14:51:00+03:00</updated>
+    <id>http://lab2023.github.com/blog/2012/03/31/rails-projelerinde-heroku-scheduler-kullanimi</id>
+    <content type="html"><![CDATA[<p>Rails ile geliştiridiğim projelerimi genelde <a href="http://heroku.com">heroku</a> üzerinde tutuyorum. Bu yazımda da bir projede kullandığım <code>Scheduler</code> 'i anlatacağım.</p>
+
+<p><img class="left" src="/images/scheduler.png" title="Heroku Scheduler" > <code>Scheduler (Zamanlayıcı)</code> Heroku üzerindeki projelerimizde <code>cron</code> yerine kullanabilecegimiz, <code>cron</code> 'dan daha gelişmiş add-on. Mesela sisteminizdeki kullanıcıları günlük olarak gelişmelereden haberdar etmek istiyoruz. Hergün uygulamaya girip kendimiz mail gönderme fonksiyonunu çalıştırmayacağız herhalde :). İşte <code>Scheduler</code> burada devreye girip bizim yerimize istediğimiz zamanlarda mail gönderme fonksiyonunu çalıştırıyor.</p>
+
+<!-- more -->
+
+
+<p>Scheduler günlük, saatlik veya 10 dakikalık zaman dilimlerinde görev tanımlama imkanı sunuyor. Şimdilik bunların hepsi ücretsiz :)</p>
+
+<p>Uygulamamıza <code>Scheduler</code> eklemek için</p>
+
+<ol>
+<li><p><a href="https://addons.heroku.com/scheduler">https://addons.heroku.com/scheduler</a> sayfasındaki add butonuna tıklayarak yada,</p></li>
+<li>Terminalden aşağıdaki komutu yazarak
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>heroku addons:add scheduler:standard</span></code></pre></td></tr></table></div></figure></notextile></div></li>
+</ol>
+
+
+<p>ekleme yapıyoruz.
+Daha sonra <code>lib/rake</code> klasörü altına <code>scheduler.rake</code> isminde bir dosya oluşturup içine şu kodları ekliyoruz.
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>scheduler.rake</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">desc</span> <span class="s2">&quot;This task is called by the Heroku scheduler add-on&quot;</span>
+</span><span class='line'><span class="n">task</span> <span class="ss">:update_feed</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;puts &quot;Updating feed...&quot;</span>
+</span><span class='line'><span class="sr">NewsFeed.update</span>
+</span><span class='line'><span class="sr">puts &quot;done.&quot;</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;end&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span><span class="n">task</span> <span class="ss">:send_reminders</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;User.send_reminders</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Yukarıdaki kodu açıklayacak olursak; Burada <code>:update_feed</code> görev ismi. <code>puts "Updating feed..."</code> ile log' a <em>Updating feed...</em> yazıyor. Sonra <code>NewsFeed</code> classının <code>update</code> metodunu çalıştırıyor. Son satırda ise log' a <em>done.</em> yazıyor. Diğer görevde aynı mantıkla çalışıyor. Buradaki NewsFeed ve User class' ları NewsFeed ve User modelimizin class' ları.</p>
+
+<p><img class="left" src="/images/37-original.jpg" title="Heroku Scheduler" >Evet şimdi görevleri yazdık, Heroku' da tanımlama zamanı. Uygulamamızın General Info sayfasına gidiyoruz ve sağ üstteki drop down şeklindeki add-ons menüsüne tıklayarak uygulamamıza eklemiş olduğumuz add-on ları görüyoruz. Buradan Scheduler' i seçip scheduler dashboard' a ulaşıyoruz. Add job diyerek yeni bir görev tanımlıyoruz. Görev isminin başına rake komutunu eklemeyi unutmayalım. Çünkü rails' de görevleri rake komutu ile çalıştırıyoruz.</p>
+
+<p>Burada tanımladığımız görevlerin zaman dilimi yukarıda da bahsettiğim gibi saatlik, günlük veya 10 dakikalık. Peki kendimiz bir zaman dilimi belirleyemez miyiz?. Ben bir görevi haftalık çalıştırmak istedğimde şöyle bir yola başvurdum;</p>
+
+<p>Heroku üzerinde görev zaman dilimini günlük olarak ayarlıyıp, görev koduna da günü kontrol eden if bloğu ekleyerek haftanın istedğim gününde görevi çalıştırıyorum.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>scheduler.rake</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">desc</span> <span class="s2">&quot;This task is called by the Heroku scheduler add-on&quot;</span>
+</span><span class='line'><span class="n">task</span> <span class="ss">:send_mail</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;if Time.now.saturday?</span>
+</span><span class='line'><span class="sr">    User.send_mail</span>
+</span><span class='line'><span class="sr">end</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Burada <code>Time.now.saturday?</code> kodu true false döndürüyor. Görev de sadece cumartesi günleri çalışıyor. <code>Time.now.saturday?</code> yerine <code>Date.today.wday == 6</code> de kullanabiliriz.</p>
+
+<p>Komut satırına <code>heroku logs --ps run</code> yazarak görev log' ları görebiliriz.</p>
+
+<p>Kolaylıklar...</p>
+]]></content>
+  </entry>
+  
+</feed>

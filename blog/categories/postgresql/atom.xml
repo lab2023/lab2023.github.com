@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: postgresql | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/postgresql/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[PostgreSQL Yedek Alma ve Geri Yükleme]]></title>
+    <link href="http://lab2023.github.com/blog/2013/01/21/postgresql-yedek-alma-ve-geri-yukleme/"/>
+    <updated>2013-01-21T18:38:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2013/01/21/postgresql-yedek-alma-ve-geri-yukleme</id>
+    <content type="html"><![CDATA[<h4><code>pg_dump</code></h4>
+
+<p><code>pg_dump veritabaniadi -f dosyaadi.dump</code></p>
+
+<ul>
+<li>1 vt yedeği alır.</li>
+<li>Öntanımlı olarak düz metin yedek alır.</li>
+<li><p>Yedeği sıkıştırabilir.
+<code>pg_dump -Fc veritabaniadi -f dosyaadi.dump</code></p></li>
+<li><p>Global veriyi almaz. (User, tablespace)</p></li>
+<li>Sıkıştırılmış yedeği tablo bazında açma imkanı. Sadece sıkıştırılmış formattayken.</li>
+<li>Sadece istenilen tabloların yedeğini alma
+<code>-t "satislar."</code> satislar tablosunun yedeğini al. <code>-T satislar</code> satislar dışındaki tabloların yedeğini al.</li>
+<li>Sadece schema yı yedek alma
+<code>-s</code></li>
+<li>Sadece dataları almak.
+<code>-a</code></li>
+</ul>
+
+
+<h4><code>pg_dumpall</code></h4>
+
+<ul>
+<li>Tüm veritabanlarının yedeğini tek dosyaya alır.</li>
+<li>Sadece düz metin olarak yedek alır.(.sql)</li>
+<li>Bir tablo veya database açılamaz. Yedekler olduğu gibi geri yüklenir.</li>
+<li>Global bilgileri ayrı olarak yedekleyebilirsiniz.
+<code>pg_dumpall -g -f dosyaadi.dump</code></li>
+<li>Sadece schema yı yedek alma
+<code>-s</code></li>
+<li>Sadece dataları almak.
+<code>-a</code></li>
+</ul>
+
+
+<p><code>pg_dump</code> &amp; <code>pg_dumpall</code></p>
+
+<ul>
+<li><code>INSERT</code> li yedek almaz. Bunun yerine <code>COPY</code> kullanılır. Sebebi her <code>INSERT</code> işleminin <code>TRANSACTION</code> içerisinde olmasıdır.</li>
+</ul>
+
+
+<p>Kesinlikle <code>pg_dump</code> kullanın, yedeği sıkıştırın, global bilgileri <code>pg_dumpall</code> ile alın. Geri yüklerken önce global veriler yüklenir.</p>
+
+<h3><code>pg_restore</code></h3>
+
+<ul>
+<li><code>pg_restore -d veritabaniadi yedek.dump -j 4</code></li>
+<li>Sadece sıkıştırlmış verileri geri yükler.</li>
+<li><code>-j</code> parelel oturum.</li>
+</ul>
+
+
+<p><a href="http://ab.org.tr/ab13/postgresql.html">ab2013 postgresql</a> eğitim notlarından.</p>
+
+<p>İyi çalışmalar.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: authorization | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/authorization/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby On Rails REST API'de Access Token Kullanarak Kullanıcı Doğrulama]]></title>
+    <link href="http://lab2023.github.com/blog/2012/11/27/ruby-on-rails-rest-api-de-access-token-kullanarak-kullanici-dogrulama/"/>
+    <updated>2012-11-27T17:23:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2012/11/27/ruby-on-rails-rest-api-de-access-token-kullanarak-kullanici-dogrulama</id>
+    <content type="html"><![CDATA[<p>Öncelikle;</p>
+
+<ul>
+<li><p><code>HTTPS</code> kullanın. Çünkü <code>HTTP</code> kullanıldığında  parametreler plain text olarak iletiliyor. <code>Http Request</code>' leri dinleyen birisi keylerinize çok rahat ulaşabilir.</p></li>
+<li><p><code>access_token</code>' ları url den parametre olarak almak yerine <code>Http Header</code>' dan almak daha uygundur. Çünkü kullanıcı alışkanlıkları  (kopyala-yapıştır-test et) yönündedir. URL de unutulan tokenlar güvenlik için tehlikeli olabilir.</p></li>
+</ul>
+
+
+<p>Kullanıcı doğrulama ile ilgili daha önce yazdığım <a href="http://muhammetdilek.dudupress.com/articles/ruby-on-rails-rest-api-de-http-basic-authentication-kullanarak-kullanici-dogrulama">Ruby On Rails REST API' de HTTP Basic Authentication Kullanarak Kullanıcı Doğrulama
+</a> yazısını okuyabilirsiniz.</p>
+
+<!-- more -->
+
+
+<p><code>API</code>' de güvenliği sağlamanın diğer bir yolu ise <code>API</code>' yi kullanacak client' lara bir <code>API_KEY</code> verip o <code>API_KEY</code> ile authenticate yapmak. Bu yöntemi kullanırsak <code>API_KEY</code> leri saklamak için bir modele ihtiyacımız olacak.
+Bu modelde;</p>
+
+<ul>
+<li><code>user_id</code></li>
+<li><code>access_token</code></li>
+<li><code>expires_at</code>
+alanlarını tutacağız. Eğer <code>API_KEY</code> ömrünü kısıtlamak istemiyorsanız <code>expires_at</code> alanına ihtiyacınız yok.</li>
+</ul>
+
+
+<p>Ben burada örneği kısa tutmak için <code>user_id</code> ve <code>expires_at</code> alanlarını kullanmayacağım.</p>
+
+<p>```bash
+Muhammets-iMac:pigon muhammetdilek$ rails g model api_key access_token:string</p>
+
+<pre><code>  invoke  active_record
+  create    db/migrate/20121006130334_create_api_keys.rb
+  create    app/models/api_key.rb
+  invoke    test_unit
+  create      test/unit/api_key_test.rb
+  create      test/fixtures/api_keys.yml
+</code></pre>
+
+<p>```</p>
+
+<p>```ruby
+class ApiKey &lt; ActiveRecord::Base
+  before_create :generate_access_token</p>
+
+<p>  private</p>
+
+<p>  def generate_access_token</p>
+
+<pre><code>begin
+  self.access_token = SecureRandom.hex
+end while self.class.exists?(access_token: access_token)
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Burada <code>access_token</code> üretmek için <code>ruby 1.9</code>' la gelen <code>SecureRandom.hex</code> metodunu kullanarak 16 haneden oluşan <code>string</code> bir <code>access_token</code> oluşturuyoruz. Eğer oluşturulan bu <code>access_token</code> daha önceden oluşturulmuş ise kod daha önceden oluşturulmayan bir <code>access_token</code> üretinceye kadar tekrar çalışıyor.</p>
+
+<p>Şimdi bir ApiKey oluşturup devam edelim.</p>
+
+<p><code>bash
+Muhammets-iMac:pigon muhammetdilek$ rails c
+Loading development environment (Rails 3.2.8)
+1.9.3p194 :001 &gt; ApiKey.create
+   (0.0ms)  begin transaction
+  ApiKey Exists (0.1ms)  SELECT 1 AS one FROM "api_keys" WHERE "api_keys"."access_token" = '765582c8bf829e682abe70618957a42a' LIMIT 1
+Binary data inserted for `string` type on column `access_token`
+  SQL (35.5ms)  INSERT INTO "api_keys" ("access_token", "created_at", "updated_at") VALUES (?, ?, ?)  [["access_token", "765582c8bf829e682abe70618957a42a"], ["created_at", Sat, 06 Oct 2012 13:11:59 UTC +00:00], ["updated_at", Sat, 06 Oct 2012 13:11:59 UTC +00:00]]
+   (2.0ms)  commit transaction
+ =&gt; #&lt;ApiKey id: 1, access_token: "765582c8bf829e682abe70618957a42a", created_at: "2012-10-06 13:11:59", updated_at: "2012-10-06 13:11:59"&gt;
+1.9.3p194 :002 &gt;
+</code></p>
+
+<p><code>Controller</code>' a <code>access_token</code> kontrolü yapan bir metod yazacağız;</p>
+
+<p>```ruby
+module Api
+  module V2</p>
+
+<pre><code>class ProductsController &lt; ApplicationController
+  include ActionController::MimeResponds
+  include ActionController::HttpAuthentication::Basic::ControllerMethods
+  #http_basic_authenticate_with name: 'admin', password: 'secret'
+  before_filter :restrict_access
+
+  respond_to :json, :xml
+
+  #Actions
+
+  private
+
+  def restrict_access
+    api_key = ApiKey.find_by_access_token(params[:access_token])
+    head :unauthorized unless api_key
+  end
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p><code>http://pigon.dev/api/products</code> adresini açtığımızda bize hiçbir datanın dönmediğini görüyoruz. Birde query olarak <code>access_token</code> ekleyerek bakalım;
+<img src="https://dl.dropbox.com/u/44821222/access-token.png" alt="API_KEY" />
+Evet gördüğünüz gibi urlden <code>acces_token</code> alarak datalara erişim kısıtlaması getirebiliyoruz. <code>access_token</code>' bilgilisini <code>URL</code>' den almak yerine <code>HTTP Header</code> dan alalım.</p>
+
+<p><code>Rails</code>' te <code>HTTP header</code>' dan <code>access_token</code> almak için <code>authenticate_or_request_with_http_token</code> metodunu kullancağız.</p>
+
+<p>```ruby
+def restrict_access
+  #api_key = ApiKey.find_by_access_token(params[:access_token])
+  #head :unauthorized unless api_key
+  authenticate_or_request_with_http_token do |token, options|</p>
+
+<pre><code>ApiKey.exists?(access_token: token)
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Eğer <a href="https://github.com/rails-api/rails-api"><code>Rails::API</code></a> gem' ini kullanıyorsak <code>ActionController::HttpAuthentication::Token::ControllerMethods</code> modülünü <code>Controller</code>' a eklememiz gerekiyor.</p>
+
+<p><code>bash
+Muhammets-iMac:pigon muhammetdilek$ curl http://pigon.dev/api/products -H 'Authorization: Token token="xyz"'
+HTTP Token: Access denied.
+Muhammets-iMac:pigon muhammetdilek$
+</code></p>
+
+<p><code>bash
+Muhammets-iMac:pigon muhammetdilek$ curl http://pigon.dev/api/products -H 'Authorization: Token token="765582c8bf829e682abe70618957a42a"'
+[{"amount":"4.3","created_at":"2012-10-06T09:58:47Z","id":2,"title":"Product2","updated_at":"2012-10-06T09:58:47Z"},{"amount":"15.0","created_at":"2012-10-06T09:59:14Z","id":3,"title":"Product3Update","updated_at":"2012-10-06T09:59:24Z"}]Muhammets-iMac:pigon muhammetdilek$
+</code>
+Komut satırından baktığımızda kodlarımızın çalıştığını görüyoruz.</p>
+
+<p>İyi çalışmalar.</p>
+
+<p>Kaynak: <a href="http://railscasts.com/episodes/352-securing-an-api">RailsCasts</a></p>
+]]></content>
+  </entry>
+  
+</feed>

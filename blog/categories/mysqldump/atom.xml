@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: mysqldump | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/mysqldump/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[mysqldump ile veritabanı yedeği alma]]></title>
+    <link href="http://lab2023.github.com/blog/2012/10/22/mysqldump-ile-veritabani-yedegi-alma/"/>
+    <updated>2012-10-22T15:07:00+03:00</updated>
+    <id>http://lab2023.github.com/blog/2012/10/22/mysqldump-ile-veritabani-yedegi-alma</id>
+    <content type="html"><![CDATA[<p>Bugün sunucu üzerinde işlemler yaparken ne olur olmaz deyip mysql yedeğini alayım dedim. Aşağıdaki komut satırı ile veritabanı yedeğini alabiliyormuşuz.</p>
+
+<p><code>mysqldump -u username -p database&gt; backup_20121022.sql</code></p>
+
+<p><code>mysql</code> şifresini girdikten sonra bulunduğumuz dizine <code>backup_20121022.sql</code> isminde bir dosyaya veritabanı yedeğini alıyor.</p>
+
+<p>İyi çalışmalar.</p>
+]]></content>
+  </entry>
+  
+</feed>

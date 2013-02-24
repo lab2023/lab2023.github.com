@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: globalize3 | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/globalize3/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[globalize3 ile Çoklu Dil Desteği (I18n)]]></title>
+    <link href="http://lab2023.github.com/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n/"/>
+    <updated>2013-01-24T14:29:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n</id>
+    <content type="html"><![CDATA[<p>Model katmanına I18n desteği eklemek için <a href="https://github.com/svenfuchs/globalize3">globalize3</a> gemini kullanıyoruz.</p>
+
+<p>Gemfile' a <code>gem 'globalize3'</code> ekleyip <code>bundle install</code> ile gemi kuralım.</p>
+
+<p>Modelde I18n desteği eklenilecek fieldları belirtiyoruz.</p>
+
+<p><code>ruby
+class Country &lt; ActiveRecord::Base
+  attr_accessible :name
+  translates :name
+end
+</code></p>
+
+<!-- more -->
+
+
+<p>Daha sonra migrationda translates tablosunu oluşturacak kodu ekliyoruz.</p>
+
+<p>```ruby
+class CreateCountries &lt; ActiveRecord::Migration
+  def change</p>
+
+<pre><code>create_table :countries do |t|
+
+  t.timestamps
+end
+Country.create_translation_table! :name =&gt; :string
+Country.create(name: "Turkey")
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p><code>rake db:migrate</code> komutunu çalıştıralım.</p>
+
+<p>```ruby</p>
+
+<blockquote><blockquote><p>I18n.locale
+:en
+Country.first.name
+"TURKEY"
+I18n.locale = :tr
+:tr
+Country.first.name
+nil
+c = Country.first</p>
+
+<h1><Country id: 1, name: nil, created_at: "2013-01-24 08:20:59", updated_at: "2013-01-24 11:09:31"></h1>
+
+<p>c.name = "Türkiye"
+"Türkiye"
+c.save
+true
+I18n.locale
+:tr
+Country.first.name
+"Türkiye"
+```</p></blockquote></blockquote>
+
+<p>Örnekte locale <code>:tr</code> iken bir veri kaydedilmediğinden <code>nil</code> sonucu döndü. Eğer <code>nil</code> yerine default locale değerinin dönmesini istersek <code>application.rb</code> dosyasına aşağıdaki satırı ekleyelim.</p>
+
+<p><code>ruby
+config.i18n.fallbacks = true
+</code></p>
+
+<p>İyi çalışmalar dilerim.</p>
+]]></content>
+  </entry>
+  
+</feed>

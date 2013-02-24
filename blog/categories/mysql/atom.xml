@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: mysql | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/mysql/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[MySQL root şifresini resetleme]]></title>
+    <link href="http://lab2023.github.com/blog/2012/10/23/mysql-root-sifresini-resetleme/"/>
+    <updated>2012-10-23T15:22:00+03:00</updated>
+    <id>http://lab2023.github.com/blog/2012/10/23/mysql-root-sifresini-resetleme</id>
+    <content type="html"><![CDATA[<p><code>root</code> şifreside unutulurmu demeyin valla unutuluyor :)</p>
+
+<ul>
+<li><code>MySQL</code> server durdulur</li>
+</ul>
+
+
+<p>```bash
+$ service mysql stop</p>
+
+<h1>veya</h1>
+
+<p>$ sudo /etc/init.d/mysql stop
+<code>``
+*</code>--skip-grant-tables` parametresi ile güvenli modda tekrar başlatalım. Güvenli modda başlatınca yetkilerin hiçbirisi dikkate alınmayacak.</p>
+
+<p><code>bash
+$ sudo mysqld_safe --skip-grant-tables
+</code>
+* <code>MySQL</code> konsoluna giriş yapalım</p>
+
+<p><code>bash
+$ mysql -u root
+</code></p>
+
+<ul>
+<li><code>root</code> şifresini değiştirelim</li>
+</ul>
+
+
+<p><code>bash
+mysql&gt; use mysql;
+mysql&gt; update user set password=PASSWORD("NEWPASSWORD") where User='root';
+mysql&gt; flush privileges;
+mysql&gt; quit
+</code>
+* <code>MySQL</code> sunucusunu başlatalım</p>
+
+<p><code>bash
+$ service mysql start
+</code></p>
+
+<p>İyi çalışmalar...</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[MySQL'de yeni veritabanı ve veritabanı kullancısı oluşturma]]></title>
+    <link href="http://lab2023.github.com/blog/2012/10/23/mysqlde-yeni-veritabani-ve-veritabani-kullancisi-olusturma/"/>
+    <updated>2012-10-23T13:04:00+03:00</updated>
+    <id>http://lab2023.github.com/blog/2012/10/23/mysqlde-yeni-veritabani-ve-veritabani-kullancisi-olusturma</id>
+    <content type="html"><![CDATA[<ul>
+<li><code>MySQL</code>' e login olalım</li>
+</ul>
+
+
+<p><code>bash
+$ mysql -u root -p
+</code></p>
+
+<ul>
+<li>Veritabanı oluşturalım</li>
+</ul>
+
+
+<p><code>mysql
+mysql&gt; CREATE DATABASE pigon_production;
+</code></p>
+
+<p><code>pigon_production</code> isminde bir veritabanı oluşturduk.</p>
+
+<ul>
+<li>Şimdide bir kullanıcı oluşturalım ve <code>pigon_production</code>' ı kullanabilmesi için yetki verelim.</li>
+</ul>
+
+
+<p><code>mysql
+mysql&gt; GRANT ALL ON pigon_production.* TO 'pigon'@localhost IDENTIFIED BY 'pigon_password';
+mysql&gt; FLUSH PRIVILEGES;
+</code></p>
+
+<p>Artık <code>pigon</code> kullanıcısı oluşturuldu ve <code>pigon_production</code> veritabanını kullanma yetkisi verildi. Buradaki yetki <code>GRANT ALL</code> komutundan da anlaşılacağı gibi veritabanı üzerinde tüm işlemleri yapabilme yetkisidir.</p>
+
+<p>Kolaylıklar...</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Mysql'de kullanıcı şifrelerini değiştirme]]></title>
+    <link href="http://lab2023.github.com/blog/2012/10/22/mysql-de-kullanici-sifrelerini-degistirme/"/>
+    <updated>2012-10-22T15:10:00+03:00</updated>
+    <id>http://lab2023.github.com/blog/2012/10/22/mysql-de-kullanici-sifrelerini-degistirme</id>
+    <content type="html"><![CDATA[<p>MySQL şifre değiştirme işlemleri için kullandığım iki yöntem var. Onlardan bahsedeceğim.</p>
+
+<h3><code>mysqladmin</code> komutunu kullanarak</h3>
+
+<p><code>bash
+$ mysqladmin -u root -pcurrentpassword password 'newpassword'
+</code></p>
+
+<blockquote><p>-p<strong>currentpassword</strong> teki <code>p</code> ile <code>currentpassword</code> bitişik. Bu alana şimdiki şifremizi <code>newpassword</code> alanınan da yeni şifremizi yazıyoruz.</p></blockquote>
+
+<!-- more -->
+
+
+<h3><code>UPDATE</code> sql komutunu kullanarak</h3>
+
+<p>1) <strong>Mysql server' a login olalım;</strong></p>
+
+<p><code>bash
+$ mysql -u root -p
+</code></p>
+
+<p>2) <strong>mysql database' ini seçelim;</strong></p>
+
+<p><code>bash
+mysql&gt; use mysql;
+</code></p>
+
+<p>3) <strong>Aşağıdaki sql komutuyla şifreyi değiştiriyoruz;</strong></p>
+
+<p><code>bash
+mysql&gt; update user set password=PASSWORD("NEWPASSWORD") where User='root';
+</code></p>
+
+<p>4) <strong>Yetkileri yenileyelim;</strong></p>
+
+<p><code>bash
+mysql&gt; flush privileges;
+mysql&gt; quit
+</code></p>
+
+<blockquote><p><strong>NOT: <code>MySQL</code> kullancı bilgileri <code>mysql</code> database' inde tutulmaktadır. Step2 de <code>mysql</code> database' ini seçerek işlemlere devam ettik.</strong></p></blockquote>
+
+<p>İyi çalışmalar...</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[mysqldump ile veritabanı yedeği alma]]></title>
+    <link href="http://lab2023.github.com/blog/2012/10/22/mysqldump-ile-veritabani-yedegi-alma/"/>
+    <updated>2012-10-22T15:07:00+03:00</updated>
+    <id>http://lab2023.github.com/blog/2012/10/22/mysqldump-ile-veritabani-yedegi-alma</id>
+    <content type="html"><![CDATA[<p>Bugün sunucu üzerinde işlemler yaparken ne olur olmaz deyip mysql yedeğini alayım dedim. Aşağıdaki komut satırı ile veritabanı yedeğini alabiliyormuşuz.</p>
+
+<p><code>mysqldump -u username -p database&gt; backup_20121022.sql</code></p>
+
+<p><code>mysql</code> şifresini girdikten sonra bulunduğumuz dizine <code>backup_20121022.sql</code> isminde bir dosyaya veritabanı yedeğini alıyor.</p>
+
+<p>İyi çalışmalar.</p>
+]]></content>
+  </entry>
+  
+</feed>

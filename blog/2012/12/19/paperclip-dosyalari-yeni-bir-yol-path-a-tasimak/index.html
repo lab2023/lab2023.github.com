@@ -1,0 +1,371 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Paperclip: Dosyaları  Yeni Bir Yol (Path)' a Taşımak - lab2023 - internet teknolojileri</title>
+  <meta name="author" content="lab2023">
+
+  
+  <meta name="description" content="Dosya upload işlemleri için genellikle Paperclip kulanıyoruz. Paperclipte :path parametresi ile dosyanın hangi path altına kaydedeliceğini &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://lab2023.github.com/blog/2012/12/19/paperclip-dosyalari-yeni-bir-yol-path-a-tasimak/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="lab2023 - internet teknolojileri" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">lab2023 - internet teknolojileri</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:lab2023.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Paperclip: Dosyaları Yeni Bir Yol (Path)' a Taşımak</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-19T17:08:00+02:00" pubdate data-updated="true">Dec 19<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Dosya upload işlemleri için genellikle <a href="https://github.com/thoughtbot/paperclip">Paperclip</a> kulanıyoruz.  Paperclipte <code>:path</code> parametresi ile dosyanın hangi path altına kaydedeliceğini belirtebiliyoruz. <code>Product</code> modelindeki <code>:picture</code> için bir path belirledik. Dosyalar <code>public/system/products/pictures/</code> dizinin altına <code>:style(original, icon, small, large)</code> klasörününde içine <code>"#{id}-#{name.parameterize}.format"</code> olarak kaydedilyor. Linklerde <code>http://localhost:3000/system/products/pictures/original/1-bilgisayar.jpeg</code> şeklinde oluyor. Peki biz bu path&#8217; i ürün production&#8217; a çıktıktan sonra değiştirirsek ne olur ?. Ne olacak tüm dosya linkleri patlayacak :) Yani eski dosyaları yeni path ile tekrar kaydettirmemiz gerekecek.</p>
+
+<!-- more -->
+
+
+<h3>Önce</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Product</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">has_attached_file</span> <span class="ss">:picture</span><span class="p">,</span>
+</span><span class='line'>                    <span class="ss">:default_url</span> <span class="o">=&gt;</span> <span class="s2">&quot;/assets/missing-image.jpg&quot;</span><span class="p">,</span>
+</span><span class='line'>                    <span class="ss">:styles</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>                        <span class="ss">:icon</span> <span class="o">=&gt;</span> <span class="s2">&quot;20x30#&quot;</span><span class="p">,</span>
+</span><span class='line'>                        <span class="ss">:small</span> <span class="o">=&gt;</span> <span class="s2">&quot;180x270#&quot;</span><span class="p">,</span>
+</span><span class='line'>                        <span class="ss">:large</span> <span class="o">=&gt;</span> <span class="s2">&quot;400x600#&quot;</span>
+</span><span class='line'>                    <span class="p">},</span>
+</span><span class='line'>                    <span class="ss">:path</span> <span class="o">=&gt;</span> <span class="s2">&quot;public/system/:class/:attachment/:style/:sef_file_name.:extension&quot;</span><span class="p">,</span>
+</span><span class='line'>                    <span class="ss">:url</span> <span class="o">=&gt;</span> <span class="s2">&quot;/system/:class/:attachment/:style/:sef_file_name.:extension&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="no">Paperclip</span><span class="o">.</span><span class="n">interpolates</span> <span class="ss">:sef_file_name</span> <span class="k">do</span> <span class="o">|</span><span class="n">attachment</span><span class="p">,</span> <span class="n">style</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">attachment</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">sef_file_name</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">sef_file_name</span>
+</span><span class='line'>    <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">id</span><span class="si">}</span><span class="s2">-</span><span class="si">#{</span><span class="nb">name</span><span class="o">.</span><span class="n">parameterize</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Sonra</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Product</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">has_attached_file</span> <span class="ss">:picture</span><span class="p">,</span>
+</span><span class='line'>                    <span class="ss">:default_url</span> <span class="o">=&gt;</span> <span class="s2">&quot;/assets/missing-image.jpg&quot;</span><span class="p">,</span>
+</span><span class='line'>                    <span class="ss">:styles</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>                        <span class="ss">:icon</span> <span class="o">=&gt;</span> <span class="s2">&quot;20x30#&quot;</span><span class="p">,</span>
+</span><span class='line'>                        <span class="ss">:small</span> <span class="o">=&gt;</span> <span class="s2">&quot;180x270#&quot;</span><span class="p">,</span>
+</span><span class='line'>                        <span class="ss">:large</span> <span class="o">=&gt;</span> <span class="s2">&quot;400x600#&quot;</span>
+</span><span class='line'>                    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>`</p>
+
+<blockquote><p>Dosyalar için bir <code>:path</code> belirtmezsek <code>paperclip</code> dosyaları default path ile kaydediyor.</p></blockquote>
+
+<p>Resimler şimdi <code>public/system/products/pictures/000/:id/:style</code> şeklinde kaydediliyor.  Şimdi eski doyaları bu path altına yeniden kaydedelim. Bunun için kısa bir rake yazacağız.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">namespace</span> <span class="ss">:picture_path</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">desc</span> <span class="s2">&quot;product picture&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">task</span> <span class="ss">:product</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">products</span> <span class="o">=</span> <span class="no">Product</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;picture_file_name IS NOT NULL&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">products</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">p</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">filename</span> <span class="o">=</span> <span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;public&#39;</span><span class="p">,</span> <span class="s1">&#39;system&#39;</span><span class="p">,</span> <span class="s1">&#39;products&#39;</span><span class="p">,</span> <span class="s1">&#39;pictures&#39;</span><span class="p">,</span> <span class="s1">&#39;original&#39;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="nb">p</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">-</span><span class="si">#{</span><span class="nb">p</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">parameterize</span><span class="si">}</span><span class="s2">.</span><span class="si">#{</span><span class="nb">p</span><span class="o">.</span><span class="n">picture_file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">exists?</span> <span class="n">filename</span>
+</span><span class='line'>        <span class="n">image</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">new</span> <span class="n">filename</span>
+</span><span class='line'>        <span class="nb">p</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="n">image</span>
+</span><span class='line'>        <span class="nb">p</span><span class="o">.</span><span class="n">save!</span>
+</span><span class='line'>        <span class="n">image</span><span class="o">.</span><span class="n">close</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>filename</code>&#8217; e eski yolu atıyoruz. Eğer böyle bir yol var ise dosyayı yeniden kaydediyoruz. Kaydedilen dosyada yeni path ile kaydediliyor. Eski dosyalar hala duruyor ama.</p>
+
+<p>Son olarakta Rake&#8217; i çalıştıralım</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake picture_path:product
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>İyi çalışmalar dilerim</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Muhammet DİLEK</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-19T17:08:00+02:00" pubdate data-updated="true">Dec 19<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/paperclip/'>paperclip</a>, <a class='category' href='/blog/categories/ruby-on-rails/'>ruby-on-rails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://lab2023.github.com/blog/2012/12/19/paperclip-dosyalari-yeni-bir-yol-path-a-tasimak/" data-via="lab2023" data-counturl="http://lab2023.github.com/blog/2012/12/19/paperclip-dosyalari-yeni-bir-yol-path-a-tasimak/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/12/16/ruby-on-rails-te-ransack-gem-i-ile-arama/" title="Previous Post: Ruby On Rails' te Ransack Gem' i ile Arama">&laquo; Ruby On Rails' te Ransack Gem' i ile Arama</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/12/20/deploy-islemleri-checklist-im/" title="Next Post: Deploy İşlemleri Checklist'im">Deploy İşlemleri Checklist'im &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/24/octopress-nasil-kullanilir/">Octopress nasıl kullanılır?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/">Rails Projelerinde JQuery Autocomplete Kullanımı</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/25/ruby-on-rails-breadcrumbs-ekmek-kirintisi/">Ruby On Rails Breadcrumbs(Ekmek kırıntısı)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n/">globalize3 ile Çoklu Dil Desteği (I18n)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/21/postgresql-yedek-alma-ve-geri-yukleme/">PostgreSQL Yedek Alma ve Geri Yükleme</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("lab2023", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/lab2023" class="twitter-follow-button" data-show-count="false">Follow @lab2023</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - lab2023 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

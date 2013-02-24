@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: will_paginate | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/will-paginate/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Sayfalamada (will_paginate) Sayfa Numarası İçin Özel Parametre Geçme]]></title>
+    <link href="http://lab2023.github.com/blog/2012/10/10/sayfalamada-will-paginate-sayfa-numarasi-icin-ozel-parametre-gecme/"/>
+    <updated>2012-10-10T15:05:00+03:00</updated>
+    <id>http://lab2023.github.com/blog/2012/10/10/sayfalamada-will-paginate-sayfa-numarasi-icin-ozel-parametre-gecme</id>
+    <content type="html"><![CDATA[<p>Sayfalama için <a href="https://github.com/mislav/will_paginate"><code>will_paginate</code></a> gemini kullanıyoruz. Bazı durumlarda sayfada iki ayrı collection' a göre sayfala yapmamız gerekiyor. Dolayısıyla <code>page</code> parametresini her iki collection için kullanamıyoruz. Böyle durumlarda kendimiz parametre verebiliriz;</p>
+
+<p>```ruby</p>
+
+<h1>views</h1>
+
+<p>= will_paginate @credits, param_name: :credit_page, page_links: false</p>
+
+<h1>Controller</h1>
+
+<p>@credits = @credits.paginate(:page => params[:credit_page])
+```</p>
+
+<p>İyi çalışmalar</p>
+]]></content>
+  </entry>
+  
+</feed>

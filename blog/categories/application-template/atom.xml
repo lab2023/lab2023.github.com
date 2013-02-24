@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: application-template | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/application-template/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby On Rails Application Template Oluşturma]]></title>
+    <link href="http://lab2023.github.com/blog/2012/12/23/ruby-on-rails-application-template-olusturma/"/>
+    <updated>2012-12-23T17:00:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2012/12/23/ruby-on-rails-application-template-olusturma</id>
+    <content type="html"><![CDATA[<h3>Template nedir ?</h3>
+
+<p>Yeni bir <code>rails</code> uygulaması oluştururken genel görevleri otomatikleştirmek için yardımcı <code>ruby</code> script. Örneğin her <code>rails</code> projesinde <code>devise</code> gemini kullanıyorsak bunu her seferinde eklemek yerine template' e ekleyip aynı işlemleri tekrarlamaktan kurtulabiliriz.</p>
+
+<h3>Template Oluşturma</h3>
+
+<p>Template oluşturmak için ne bir <code>generator</code> nede bir <code>gem</code> kullancağız. İçerisine bazı metodlar yazabileceğimiz bir <code>ruby</code> dosyası yeterli :)</p>
+
+<!-- more -->
+
+
+<h3>Template Kullanımı</h3>
+
+<p>Yeni bir uygulama oluştururken <code>-m</code> parametresinden sonra template yolunu yazıyoruz.</p>
+
+<p>```bash
+$ rails new blog -m ~/template.rb
+$ rails new APP_NAME -m https://raw.github.com/lab2023/rails-template/master/rails_template.rb</p>
+
+<p>```</p>
+
+<p>Yada <code>rails:tempalte</code> rake' ini kullanabiliriz.</p>
+
+<p><code>bash
+$ rake rails:template LOCATION=~/template.rb
+$ rake rails:template LOCATION=http://example.com/template.rb
+</code></p>
+
+<h3>Template metodları:</h3>
+
+<h4>gem(name, options = {})</h4>
+
+<p><code>gem</code> metodu Gemfile dosyasın gem eklenmesini sağlıyor.</p>
+
+<p><code>ruby
+gem 'will_paginate'
+gem 'bootstrap-will_paginate'
+gem "will-paginate-i18n", "~&gt; 0.1.7"
+</code></p>
+
+<blockquote><p>NOT: <code>gem</code> metodu gemi ekliyor ama kurmuyor. Yani biz gemleri ekledikten sonra <code>bundle install</code> metodunu çalıştırmalıyız.</p></blockquote>
+
+<h4>gem_group(*names, &amp;block)</h4>
+
+<p>Grup içerisine gem yazmamızı sağlar.</p>
+
+<p><code>ruby
+group :assets do
+  gem "bootstrap-sass"
+  gem "compass-rails"
+  gem "jquery-ui-rails"
+end
+</code></p>
+
+<h4>add_source(source, options = {})</h4>
+
+<p>Gemler için source eklememizi sağlar.</p>
+
+<p><code>ruby
+add_source "http://code.whytheluckystiff.net"
+</code></p>
+
+<h4>initializer(filename, data = nil, &amp;block)</h4>
+
+<p><code>config/initializers</code> klasörü altına  initializer dosyası eklememizi sağlar.</p>
+
+<p><code>ruby
+initializer 'resque_mailer.rb', &lt;&lt;-CODE
+class AsyncMailer &lt; ActionMailer::Base
+  include Resque::Mailer
+  layout 'email'
+end
+CODE
+</code></p>
+
+<h4>rakefile(filename, data = nil, &amp;block)</h4>
+
+<p><code>lib/tasks</code> altına rake oluşturuyor</p>
+
+<p>```ruby
+rakefile("bootstrap.rake") do
+  &lt;&lt;-TASK</p>
+
+<pre><code>require "resque/tasks"
+task "resque:setup" =&gt; :environment
+</code></pre>
+
+<p>  TASK
+end
+```</p>
+
+<h4>generate(what, args)</h4>
+
+<p><code>generate</code> metodu <code>rails generator</code>' lerini çalıştırmamızı sağlıyor.</p>
+
+<p><code>ruby
+generate(:scaffold, "person", "name:string", "address:text", "age:number")
+generate 'simple_form:install --bootstrap'
+</code></p>
+
+<h4>run(command, config={})</h4>
+
+<p><code>run</code> metodu ismindende anlaşılcağı gibi sistem komutlarını çalıştırmaya yarıyor.</p>
+
+<p><code>ruby
+run 'bundle install' # bundle install komutunu çalıştırıyor
+run 'touch README.md' # README.md isminde dosya oluturyor
+</code></p>
+
+<h4>rake(command, options = {})</h4>
+
+<p><code>rake</code> çalıştırmamızı sağlıyor.</p>
+
+<p><code>ruby
+rake 'db:drop'
+rake 'db:create'
+rake 'db:migrate'
+rake "db:migrate", :env =&gt; 'production'
+</code></p>
+
+<h4>route(routing_code)</h4>
+
+<p>Route <code>config/routes.rb</code> dosyasına routing entry eklememizi sağlar.</p>
+
+<p><code>ruby
+route "root to: 'person#index'"
+</code></p>
+
+<h4>inside(dir)</h4>
+
+<p>Klasör içerinde komut çalıştırmamıza yarar.</p>
+
+<p><code>ruby
+path = "https://raw.github.com/lab2023/rails-template/master/files/"
+inside 'app/views/devise' do
+  get path + 'app/views/devise/confirmations/new.html.haml', 'confirmations/new.html.haml'
+end
+</code></p>
+
+<h4>ask(question)</h4>
+
+<p>Kullanıcıdan bilgi alınmasını sağlar.</p>
+
+<p>```ruby
+lib_name = ask("What do you want to call the shiny library ?")
+lib_name &lt;&lt; ".rb" unless lib_name.index(".rb")</p>
+
+<p>lib lib_name, &lt;&lt;-CODE
+class Shiny
+end
+CODE
+```</p>
+
+<h4>yes?(question) or no?(question)</h4>
+
+<p>Kullanıcya soru sormamızı sağlarlar.</p>
+
+<p><code>ruby
+if yes?('Would you like to use the Sphinx search system? (yes/no)')
+  sphinx_flag = true
+else
+  sphinx_flag = false
+end
+</code></p>
+
+<h4>git(:command)</h4>
+
+<p>Git komutlarını kullanmamızı sağlıyor.</p>
+
+<p><code>ruby
+git :init
+git :add =&gt; '.'
+git :commit =&gt; '-m "Issue #1 Install Rails "'
+</code></p>
+
+<h4>create_file(destination, data=nil, config={}, &amp;block)</h4>
+
+<p><code>create_file</code> metodu yeni bir dosya oluşturur.</p>
+
+<p><code>ruby
+create_file 'lib/tasks/resque.rake', &lt;&lt;-CODE
+require "resque/tasks"
+task "resque:setup" =&gt; :environment
+CODE
+</code></p>
+
+<h4>gsub_file(path, flag, *args, &amp;block)</h4>
+
+<p>Dosya içerisinde text değiştirmemizi sağlar. <code>flag</code> parametresi string ve regex bir ifade olabilir.</p>
+
+<p><code>ruby
+gsub_file 'config/application.rb', /:password/, ':password, :password_confirmation'
+</code></p>
+
+<h4>remove_file(path, config={})</h4>
+
+<p>Dosya siler.</p>
+
+<p><code>ruby
+remove_file 'app/models/user.rb'
+remove_file 'app/models/admin.rb'
+</code></p>
+
+<h4>inject_into_file(destination, *args, &amp;block)</h4>
+
+<p>Dosya içerisine text eklememeizi sağlar. <code>:after</code> ve <code>:before</code> parametreleri ile nereye ekleme yapılacağını belirtebiliriz.</p>
+
+<p>```ruby
+inject_into_file 'app/controllers/pages_controller.rb', :before => 'end' do &lt;<-RUBY
+skip_before_filter :authenticate_user!, :only => :index</p>
+
+<p>def index</p>
+
+<p>end</p>
+
+<p>RUBY
+end
+```</p>
+
+<h4>append_file(path, *args, &amp;block)</h4>
+
+<p>Dosyaya text eklememizi sağlar.</p>
+
+<p><code>ruby
+append_file '.gitignore' do &lt;&lt;-FILE
+.idea
+.idea/**/*
+FILE
+end
+</code></p>
+
+<h4>get(source, destination=nil, config={}, &amp;block)</h4>
+
+<p>Verilen adresteki içeriği alır ve hedef kaynağa yerleştirir. Yani hedef doyaya yazar.</p>
+
+<p><code>ruby
+path = "https://raw.github.com/lab2023/rails-template/master/files/"
+get path + 'app/controllers/admins/application_controller.rb', 'app/controllers/admins/application_controller.rb'
+</code></p>
+
+<p>Genel olarak sık kullandığımız metodları yazamaya çalıştım. Aşağıdaki linklerden daha fazla kaynağa ulşabilirsiniz. Dilerseniz <a href="https://github.com/lab2023/rails-template">lab2023 rails temaplate</a>' i inceleyebilrsiniz.</p>
+
+<p>Kaynaklar:
+http://guides.rubyonrails.org/rails_application_templates.html
+https://github.com/wycats/thor/wiki/Actions
+http://textmate.rubyforge.org/thor/Thor/Actions.html
+http://rdoc.info/github/wycats/thor/master/Thor/Actions</p>
+
+<p>İyi çalışmalar...</p>
+]]></content>
+  </entry>
+  
+</feed>

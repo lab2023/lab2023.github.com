@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ruby-on-rails | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/ruby-on-rails/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Projelerinde JQuery Autocomplete Kullanımı]]></title>
+    <link href="http://lab2023.github.com/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/"/>
+    <updated>2013-01-27T14:43:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi</id>
+    <content type="html"><![CDATA[<p>Bunun için <a href="http://jqueryui.com/">jQuery UI</a> kütüphanesine ihtiyacımız var. Kütüphaneyi projemize eklemek için <a href="https://github.com/joliss/jquery-ui-rails">jquery-ui-rails</a> gemini kulanacağız. Gemfile dosyasına gemi <code>gem "jquery-ui-rails"</code> ekledikten sonra <code>bundle install</code> komutunu çalıştıralım.
+Javascript kütüphanesini çağırmak için <code>application.js</code> dosyasına</p>
+
+<p><code>javascript
+//= require jquery.ui.autocomplete
+</code>
+Css kütüphanesini çağırmak için <code>application.css.scss</code> dosyasına</p>
+
+<p><code>css
+/*
+*= require jquery.ui.autocomplete
+*/
+</code>
+satırlarını ekleyelim.</p>
+
+<!-- more -->
+
+
+<p>Şimdi autocomplete yapılacak olan alanı oluşturalım.</p>
+
+<p><code>haml
+= f.text_field :name_or_country_name_cont, id: 'search_zones', :class =&gt; 'search-query',  :placeholder =&gt; "#{t('search')}...", data: {autocomplete_source: auto_admins_zones_path}
+</code></p>
+
+<p><code>data</code> autocomplete için arama yapacağı yol.</p>
+
+<p>Şimdide bu alana autocomplete özelliği verelim.</p>
+
+<p>```javascript
+//application.js
+$(document).ready(function() {</p>
+
+<pre><code>$('.search-query').autocomplete({
+    source: $('.search-query').data('autocomplete-source'),
+    messages: {
+        noResults: null,
+        results: function() {}
+    }
+});
+</code></pre>
+
+<p>});
+<code>``
+</code>.search-query<code>clas' ına sahip alanlara autocomplete özelliği eklemiş olduk.</code>source<code>parametresi ise autocomplete için verilerin yolu.</code>messages` parametresi ise ismindende anlaşılacağı gibi mesaj ayarları için. "1 sonuç bulundu, Hiç sonuç bulunamadı ..." gibi. Burada hiç bir mesaj döndürmüyor.</p>
+
+<p>Şimdi autocomplete için <code>json</code> veri döndürecek metodu yazalım.</p>
+
+<p>```ruby
+  def auto</p>
+
+<pre><code>search = Zone.search(:name_or_country_name_start =&gt; params[:term])
+zones = search.result(:distinct =&gt; true).limit(10)
+render :json =&gt; zones.map {|p| Hash[id: p.id, label: p.name, name: p.name]}
+</code></pre>
+
+<p>  end
+```</p>
+
+<p>Arama işlemlerinde <a href="https://github.com/ernie/ransack">ransack</a> kullanıyorum kafanız karışmasın. Automoplete aranılan veriyi <code>term</code> parametresi olarak gönderiyor.</p>
+
+<p><img src="https://dl.dropbox.com/u/44821222/autocomplete-1.png" alt="Autocomplete" />
+<img src="https://dl.dropbox.com/u/44821222/autocomplete-2.png" alt="Autocomplete" />
+<img src="https://dl.dropbox.com/u/44821222/autocomplete-3.png" alt="Autocomplete" /></p>
+
+<p>Autocomplete için daha detaylı dökümana <a href="http://jqueryui.com/autocomplete/#combobox">buradan</a> ulaşabilirsiniz.</p>
+
+<p>İyi çalışmalar dilerim.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby On Rails Breadcrumbs(Ekmek kırıntısı)]]></title>
+    <link href="http://lab2023.github.com/blog/2013/01/25/ruby-on-rails-breadcrumbs-ekmek-kirintisi/"/>
+    <updated>2013-01-25T13:40:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2013/01/25/ruby-on-rails-breadcrumbs-ekmek-kirintisi</id>
+    <content type="html"><![CDATA[<p>Breadcrumb için <a href="http://www.simonecarletti.com/code/breadcrumbs_on_rails/">breadcrumbs_on_rails</a> gemini kullanıyoruz. Gemfile' a <code>gem 'breadcrumbs_on_rails'</code> ekledikten sonra <code>bundle:install</code> komutunu çalıştırarak gemi kuralım. Controller' da <code>add_breadcrumb</code> metodunu çağırarak breadcrumb ekleyebiliyoruz. View katmanında ise <code>render_breadcrumbs</code> helper' ı kullanıyoruz.</p>
+
+<p><code>ruby
+class Admins::ApplicationController &lt; ActionController::Base
+  add_breadcrumb "Dashboard", :admins_dashboard_index_path #I18n.t('nav.dashboard')
+end
+</code></p>
+
+<!-- more -->
+
+
+<p>```ruby
+class Admins::CountriesController &lt; Admins::ApplicationController
+  add_breadcrumb "Countries", :admins_countries_path #I18n.t('nav.countries')
+  def index</p>
+
+<pre><code>@search = Country.search(params[:q])
+@countries = @search.result(:distinct =&gt; true).paginate(:page =&gt; params[:page])
+respond_with(@countries)
+</code></pre>
+
+<p>  end</p>
+
+<p>  def new</p>
+
+<pre><code>@country = Country.new
+add_breadcrumb "New", new_admins_country_path
+respond_with(@country)
+</code></pre>
+
+<p>  end</p>
+
+<p>  def edit</p>
+
+<pre><code>add_breadcrumb "Edit", edit_admins_country_path
+@country = Country.find(params[:id])
+</code></pre>
+
+<p>  end
+end
+```
+<img src="https://dl.dropbox.com/u/44821222/breadcrumb-1.png" alt="Braeadcrumb-1" />
+<img src="https://dl.dropbox.com/u/44821222/breadcrumb-2.png" alt="Braeadcrumb-1" />
+<img src="https://dl.dropbox.com/u/44821222/breadcrumb-3.png" alt="Braeadcrumb-1" /></p>
+
+<p>Dilerseniz <a href="http://www.simonecarletti.com/code/breadcrumbs_on_rails/">Dökümantasyon</a> sayfasının ziyaret edebilirsiniz.</p>
+
+<p>İyi çalışmalar...</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[globalize3 ile Çoklu Dil Desteği (I18n)]]></title>
+    <link href="http://lab2023.github.com/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n/"/>
+    <updated>2013-01-24T14:29:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n</id>
+    <content type="html"><![CDATA[<p>Model katmanına I18n desteği eklemek için <a href="https://github.com/svenfuchs/globalize3">globalize3</a> gemini kullanıyoruz.</p>
+
+<p>Gemfile' a <code>gem 'globalize3'</code> ekleyip <code>bundle install</code> ile gemi kuralım.</p>
+
+<p>Modelde I18n desteği eklenilecek fieldları belirtiyoruz.</p>
+
+<p><code>ruby
+class Country &lt; ActiveRecord::Base
+  attr_accessible :name
+  translates :name
+end
+</code></p>
+
+<!-- more -->
+
+
+<p>Daha sonra migrationda translates tablosunu oluşturacak kodu ekliyoruz.</p>
+
+<p>```ruby
+class CreateCountries &lt; ActiveRecord::Migration
+  def change</p>
+
+<pre><code>create_table :countries do |t|
+
+  t.timestamps
+end
+Country.create_translation_table! :name =&gt; :string
+Country.create(name: "Turkey")
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p><code>rake db:migrate</code> komutunu çalıştıralım.</p>
+
+<p>```ruby</p>
+
+<blockquote><blockquote><p>I18n.locale
+:en
+Country.first.name
+"TURKEY"
+I18n.locale = :tr
+:tr
+Country.first.name
+nil
+c = Country.first</p>
+
+<h1><Country id: 1, name: nil, created_at: "2013-01-24 08:20:59", updated_at: "2013-01-24 11:09:31"></h1>
+
+<p>c.name = "Türkiye"
+"Türkiye"
+c.save
+true
+I18n.locale
+:tr
+Country.first.name
+"Türkiye"
+```</p></blockquote></blockquote>
+
+<p>Örnekte locale <code>:tr</code> iken bir veri kaydedilmediğinden <code>nil</code> sonucu döndü. Eğer <code>nil</code> yerine default locale değerinin dönmesini istersek <code>application.rb</code> dosyasına aşağıdaki satırı ekleyelim.</p>
+
+<p><code>ruby
+config.i18n.fallbacks = true
+</code></p>
+
+<p>İyi çalışmalar dilerim.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby On Rails Application Template Oluşturma]]></title>
+    <link href="http://lab2023.github.com/blog/2012/12/23/ruby-on-rails-application-template-olusturma/"/>
+    <updated>2012-12-23T17:00:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2012/12/23/ruby-on-rails-application-template-olusturma</id>
+    <content type="html"><![CDATA[<h3>Template nedir ?</h3>
+
+<p>Yeni bir <code>rails</code> uygulaması oluştururken genel görevleri otomatikleştirmek için yardımcı <code>ruby</code> script. Örneğin her <code>rails</code> projesinde <code>devise</code> gemini kullanıyorsak bunu her seferinde eklemek yerine template' e ekleyip aynı işlemleri tekrarlamaktan kurtulabiliriz.</p>
+
+<h3>Template Oluşturma</h3>
+
+<p>Template oluşturmak için ne bir <code>generator</code> nede bir <code>gem</code> kullancağız. İçerisine bazı metodlar yazabileceğimiz bir <code>ruby</code> dosyası yeterli :)</p>
+
+<!-- more -->
+
+
+<h3>Template Kullanımı</h3>
+
+<p>Yeni bir uygulama oluştururken <code>-m</code> parametresinden sonra template yolunu yazıyoruz.</p>
+
+<p>```bash
+$ rails new blog -m ~/template.rb
+$ rails new APP_NAME -m https://raw.github.com/lab2023/rails-template/master/rails_template.rb</p>
+
+<p>```</p>
+
+<p>Yada <code>rails:tempalte</code> rake' ini kullanabiliriz.</p>
+
+<p><code>bash
+$ rake rails:template LOCATION=~/template.rb
+$ rake rails:template LOCATION=http://example.com/template.rb
+</code></p>
+
+<h3>Template metodları:</h3>
+
+<h4>gem(name, options = {})</h4>
+
+<p><code>gem</code> metodu Gemfile dosyasın gem eklenmesini sağlıyor.</p>
+
+<p><code>ruby
+gem 'will_paginate'
+gem 'bootstrap-will_paginate'
+gem "will-paginate-i18n", "~&gt; 0.1.7"
+</code></p>
+
+<blockquote><p>NOT: <code>gem</code> metodu gemi ekliyor ama kurmuyor. Yani biz gemleri ekledikten sonra <code>bundle install</code> metodunu çalıştırmalıyız.</p></blockquote>
+
+<h4>gem_group(*names, &amp;block)</h4>
+
+<p>Grup içerisine gem yazmamızı sağlar.</p>
+
+<p><code>ruby
+group :assets do
+  gem "bootstrap-sass"
+  gem "compass-rails"
+  gem "jquery-ui-rails"
+end
+</code></p>
+
+<h4>add_source(source, options = {})</h4>
+
+<p>Gemler için source eklememizi sağlar.</p>
+
+<p><code>ruby
+add_source "http://code.whytheluckystiff.net"
+</code></p>
+
+<h4>initializer(filename, data = nil, &amp;block)</h4>
+
+<p><code>config/initializers</code> klasörü altına  initializer dosyası eklememizi sağlar.</p>
+
+<p><code>ruby
+initializer 'resque_mailer.rb', &lt;&lt;-CODE
+class AsyncMailer &lt; ActionMailer::Base
+  include Resque::Mailer
+  layout 'email'
+end
+CODE
+</code></p>
+
+<h4>rakefile(filename, data = nil, &amp;block)</h4>
+
+<p><code>lib/tasks</code> altına rake oluşturuyor</p>
+
+<p>```ruby
+rakefile("bootstrap.rake") do
+  &lt;&lt;-TASK</p>
+
+<pre><code>require "resque/tasks"
+task "resque:setup" =&gt; :environment
+</code></pre>
+
+<p>  TASK
+end
+```</p>
+
+<h4>generate(what, args)</h4>
+
+<p><code>generate</code> metodu <code>rails generator</code>' lerini çalıştırmamızı sağlıyor.</p>
+
+<p><code>ruby
+generate(:scaffold, "person", "name:string", "address:text", "age:number")
+generate 'simple_form:install --bootstrap'
+</code></p>
+
+<h4>run(command, config={})</h4>
+
+<p><code>run</code> metodu ismindende anlaşılcağı gibi sistem komutlarını çalıştırmaya yarıyor.</p>
+
+<p><code>ruby
+run 'bundle install' # bundle install komutunu çalıştırıyor
+run 'touch README.md' # README.md isminde dosya oluturyor
+</code></p>
+
+<h4>rake(command, options = {})</h4>
+
+<p><code>rake</code> çalıştırmamızı sağlıyor.</p>
+
+<p><code>ruby
+rake 'db:drop'
+rake 'db:create'
+rake 'db:migrate'
+rake "db:migrate", :env =&gt; 'production'
+</code></p>
+
+<h4>route(routing_code)</h4>
+
+<p>Route <code>config/routes.rb</code> dosyasına routing entry eklememizi sağlar.</p>
+
+<p><code>ruby
+route "root to: 'person#index'"
+</code></p>
+
+<h4>inside(dir)</h4>
+
+<p>Klasör içerinde komut çalıştırmamıza yarar.</p>
+
+<p><code>ruby
+path = "https://raw.github.com/lab2023/rails-template/master/files/"
+inside 'app/views/devise' do
+  get path + 'app/views/devise/confirmations/new.html.haml', 'confirmations/new.html.haml'
+end
+</code></p>
+
+<h4>ask(question)</h4>
+
+<p>Kullanıcıdan bilgi alınmasını sağlar.</p>
+
+<p>```ruby
+lib_name = ask("What do you want to call the shiny library ?")
+lib_name &lt;&lt; ".rb" unless lib_name.index(".rb")</p>
+
+<p>lib lib_name, &lt;&lt;-CODE
+class Shiny
+end
+CODE
+```</p>
+
+<h4>yes?(question) or no?(question)</h4>
+
+<p>Kullanıcya soru sormamızı sağlarlar.</p>
+
+<p><code>ruby
+if yes?('Would you like to use the Sphinx search system? (yes/no)')
+  sphinx_flag = true
+else
+  sphinx_flag = false
+end
+</code></p>
+
+<h4>git(:command)</h4>
+
+<p>Git komutlarını kullanmamızı sağlıyor.</p>
+
+<p><code>ruby
+git :init
+git :add =&gt; '.'
+git :commit =&gt; '-m "Issue #1 Install Rails "'
+</code></p>
+
+<h4>create_file(destination, data=nil, config={}, &amp;block)</h4>
+
+<p><code>create_file</code> metodu yeni bir dosya oluşturur.</p>
+
+<p><code>ruby
+create_file 'lib/tasks/resque.rake', &lt;&lt;-CODE
+require "resque/tasks"
+task "resque:setup" =&gt; :environment
+CODE
+</code></p>
+
+<h4>gsub_file(path, flag, *args, &amp;block)</h4>
+
+<p>Dosya içerisinde text değiştirmemizi sağlar. <code>flag</code> parametresi string ve regex bir ifade olabilir.</p>
+
+<p><code>ruby
+gsub_file 'config/application.rb', /:password/, ':password, :password_confirmation'
+</code></p>
+
+<h4>remove_file(path, config={})</h4>
+
+<p>Dosya siler.</p>
+
+<p><code>ruby
+remove_file 'app/models/user.rb'
+remove_file 'app/models/admin.rb'
+</code></p>
+
+<h4>inject_into_file(destination, *args, &amp;block)</h4>
+
+<p>Dosya içerisine text eklememeizi sağlar. <code>:after</code> ve <code>:before</code> parametreleri ile nereye ekleme yapılacağını belirtebiliriz.</p>
+
+<p>```ruby
+inject_into_file 'app/controllers/pages_controller.rb', :before => 'end' do &lt;<-RUBY
+skip_before_filter :authenticate_user!, :only => :index</p>
+
+<p>def index</p>
+
+<p>end</p>
+
+<p>RUBY
+end
+```</p>
+
+<h4>append_file(path, *args, &amp;block)</h4>
+
+<p>Dosyaya text eklememizi sağlar.</p>
+
+<p><code>ruby
+append_file '.gitignore' do &lt;&lt;-FILE
+.idea
+.idea/**/*
+FILE
+end
+</code></p>
+
+<h4>get(source, destination=nil, config={}, &amp;block)</h4>
+
+<p>Verilen adresteki içeriği alır ve hedef kaynağa yerleştirir. Yani hedef doyaya yazar.</p>
+
+<p><code>ruby
+path = "https://raw.github.com/lab2023/rails-template/master/files/"
+get path + 'app/controllers/admins/application_controller.rb', 'app/controllers/admins/application_controller.rb'
+</code></p>
+
+<p>Genel olarak sık kullandığımız metodları yazamaya çalıştım. Aşağıdaki linklerden daha fazla kaynağa ulşabilirsiniz. Dilerseniz <a href="https://github.com/lab2023/rails-template">lab2023 rails temaplate</a>' i inceleyebilrsiniz.</p>
+
+<p>Kaynaklar:
+http://guides.rubyonrails.org/rails_application_templates.html
+https://github.com/wycats/thor/wiki/Actions
+http://textmate.rubyforge.org/thor/Thor/Actions.html
+http://rdoc.info/github/wycats/thor/master/Thor/Actions</p>
+
+<p>İyi çalışmalar...</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Deploy İşlemleri Checklist'im]]></title>
+    <link href="http://lab2023.github.com/blog/2012/12/20/deploy-islemleri-checklist-im/"/>
+    <updated>2012-12-20T17:05:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2012/12/20/deploy-islemleri-checklist-im</id>
+    <content type="html"><![CDATA[<p>Deploy ederken birşeyleri atlamamak için kendime bir checklist oluşturdum. Deploy için <a href="https://github.com/capistrano/capistrano">Capistrano</a> kullanıyoruz.</p>
+
+<h3>Branch Merge işlemleri</h3>
+
+<p><strong>Merge işlemlerini kesinlikle komut satırından yapın.</strong></p>
+
+<ul>
+<li>Merge edilecek branch taki tüm kodların güncel olduğundan emin olun.</li>
+</ul>
+
+
+<p><code>ruby
+git checkout develop
+git pull
+</code>
+* Kodları test edin</p>
+
+<ul>
+<li><p><strong>Üçüncü part <code>javascript</code>,  <code>css</code> dosyaları varmı bakın.</strong></p></li>
+<li><p><strong>Varsa bunlar <code>environments/production.rb</code> ye eklenmişmi ona bakın. Assets precompile için.</strong></p></li>
+<li><p>Kendisine merge yapılcak branch' taki kodların güncel olduğundan emin olun.</p></li>
+</ul>
+
+
+<p><code>ruby
+git checkout master
+git pull
+git merge --no-ff develop
+</code></p>
+
+<ul>
+<li><code>config/deploy.rb</code> dosyasını kontrol edin. IP, user, port...</li>
+</ul>
+
+
+<!-- more -->
+
+
+<h3>Deploy</h3>
+
+<ul>
+<li>Sunucuya bağlanıp veritabanı yedeği alınır. Ne olur ne olmaz.
+MySQL için <a href="http://muhammetdilek.dudupress.com/articles/mysqldump-ile-veritabani-yedegi-alma">şu yazıyı</a> okuyabilirsiniz.  (Bunu otomatik yapan bir çalışma yapacağız)</li>
+<li><code>cap deploy</code> komutu ile deploy edilir.</li>
+<li>Migration var ise <code>cap deploy:migrate</code>komutu çalıştırılır.</li>
+<li>Diğer cap task' lerine <code>cap --tasks</code>komutunu çalıştırarak bakabilirsiniz.</li>
+</ul>
+
+
+<p><code>ruby
+Muhammets-iMac:dudupress muhammetdilek$ cap --tasks
+[Deprecation Warning] This API has changed, please hook `deploy:create_symlink` instead of `deploy:symlink`.
+cap bundle:install                       # Install the current Bundler enviro...
+cap deploy                               # Deploys your project.
+cap deploy:check                         # Test deployment dependencies.
+cap deploy:check_revision                # Make sure local git is in sync wit...
+cap deploy:cleanup                       # Clean up old releases.
+cap deploy:cold                          # Deploys and starts a `cold' applic...
+cap deploy:create_symlink                # Updates the symlink to the most re...
+cap deploy:migrate                       # Run the migrate rake task.
+cap deploy:migrations                    # Deploy and run pending migrations.
+cap deploy:pending                       # Displays the commits since your la...
+cap deploy:pending:diff                  # Displays the `diff' since your las...
+cap deploy:resque_setup                  # Resque QUEUE Start
+cap deploy:restart                       # restart unicorn server
+cap deploy:rollback                      # Rolls back to a previous version a...
+cap deploy:rollback:code                 # Rolls back to the previously deplo...
+cap deploy:setup                         # Prepares one or more servers for d...
+cap deploy:start                         # start unicorn server
+cap deploy:stop                          # stop unicorn server
+cap deploy:symlink                       # Deprecated API.
+cap deploy:update                        # Copies your project and updates th...
+cap deploy:update_code                   # Copies your project to the remote ...
+cap deploy:update_crontab                # Update the crontab file
+cap deploy:upload                        # Copy files to the currently deploy...
+cap invoke                               # Invoke a single command on the rem...
+cap shell                                # Begin an interactive Capistrano se...
+cap thinking_sphinx:configure            # Generate the Sphinx configuration ...
+cap thinking_sphinx:index                # Index data
+cap thinking_sphinx:install:sphinx       # If Postgres is available, Sphinx w...
+cap thinking_sphinx:install:ts           # Install Thinking Sphinx as a gem
+cap thinking_sphinx:rebuild              # Stop, re-index and then start the ...
+cap thinking_sphinx:restart              # Stop and then start the Sphinx daemon
+cap thinking_sphinx:shared_sphinx_folder # Add the shared folder for sphinx f...
+cap thinking_sphinx:start                # Start the Sphinx daemon
+cap thinking_sphinx:stop                 # Stop the Sphinx daemon
+cap whenever:clear_crontab               # Clear application's crontab entrie...
+cap whenever:update_crontab              # Update application's crontab entri...
+</code></p>
+
+<ul>
+<li>Açıklamaları ile birlikte http://capitate.rubyforge.org/recipes/deploy.html</li>
+<li>Deploydan sonra <code>cap deploy:restart</code> komutu ile unicorn restart edilir.</li>
+<li>Test edilir.</li>
+<li>Test sonucu başarılı ise bilgilendirme maili atılır.</li>
+<li>Başarılı değilse başarılı olana kadar hotfix yapılır.</li>
+</ul>
+
+
+<h3>Hotfix</h3>
+
+<ul>
+<li>Hotfix branch oluştur</li>
+</ul>
+
+
+<p><code>ruby
+git checkout -b hotfix-1.2.1 master
+</code>
+* Hataları düzelt commit et
+* Master branch' a merge et
+* Sonra develop branch' a merge et
+* Sonra hotfix branch' ını sil</p>
+
+<p><code>ruby
+git branch -d hotfix-1.2.1
+git push origin :hotfix-1.2.1
+</code></p>
+
+<p>İyi çalışmalar dilerim...</p>
+]]></content>
+  </entry>
+  
+</feed>

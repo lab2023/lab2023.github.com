@@ -1,0 +1,560 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Ruby On Rails ile Rails::API Gem'ini Kullanarak API Geliştirme - lab2023 - internet teknolojileri</title>
+  <meta name="author" content="lab2023">
+
+  
+  <meta name="description" content="Daha önce API geliştirme ile ilgili Ruby On Rails’ te API Yazalım başlıklı bir yazı yazmıştım. Bu yazımda ise Rails::API gem&#8217; ini kullanarak &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://lab2023.github.com/blog/2012/11/24/ruby-on-rails-ile-rails-api-gem-ini-kullanarak-api-gelistirme/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="lab2023 - internet teknolojileri" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">lab2023 - internet teknolojileri</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:lab2023.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Ruby on Rails Ile Rails::API Gem'ini Kullanarak API Geliştirme</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-24T17:25:00+02:00" pubdate data-updated="true">Nov 24<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Daha önce API geliştirme ile ilgili <a href="http://www.gelistiricigunlugu.com/ruby-on-rails-te-api-yazalim/">Ruby On Rails’ te API Yazalım</a> başlıklı bir yazı yazmıştım. Bu yazımda ise <code>Rails::API</code> gem&#8217; ini kullanarak <code>API</code> geliştirmeyi anlatacağım.</p>
+
+<p><code>Rails::API</code> bir <code>API</code> için gerekli olan kütüphaneler dışındaki kütüphaneleri çıkararak(view, assests &#8230;), normal bir rails projesine göre daha hafif bir proje oluşturabilmemizi sağlayan gem.</p>
+
+<p>Aşağıdaki komutu çalıştırarak gem&#8217; i yükleyelim</p>
+
+<p><code>gem install rails-api</code></p>
+
+<!-- more -->
+
+
+<p>Yeni proje oluşturmak için aşağıdaki komutu kullanacağız.</p>
+
+<p><code>rails-api new pigon</code></p>
+
+<p>Komutu çalışıtrdıktan sonra projenin dosyalarına baktığımızda <code>app</code> dizininin çok sade olduğunu görüyoruz. API geliştirme ihtiyacı dışındaki şeyler(views, helpers, assets) atılmıştır. <code>ApplicationController</code>&#8217; a baktığımızda <code>ActionController::Base</code> yerine daha hafif olan <code>ActionController::API</code>&#8217; den türetildiğini görüyoruz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="ss">ActionController</span><span class="p">:</span><span class="ss">:API</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>En büyük değişiklik ise <code>Gemfile</code> dosyamızda. <code>rails-api</code> gem&#8217; ini buraya eklenmiş olarak görüyoruz fakat <code>assets</code> grubundaki gem&#8217; lerin ve <code>jquery-rails</code> gem&#8217; inin eklenmediğini görüyoruz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">source</span> <span class="s1">&#39;https://rubygems.org&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.2.8&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Bundle edge Rails instead:</span>
+</span><span class='line'><span class="c1"># gem &#39;rails&#39;, :git =&gt; &#39;git://github.com/rails/rails.git&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;rails-api&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;sqlite3&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Peki generator&#8217; larda nasıl bir değişiklik oluyor?. <code>scaffold</code> ile <code>Product</code> modeli oluşturduğumuzda <code>assets</code>, <code>views</code> ve <code>helpers</code> dosyalarının oluşturulmadığını görüyoruz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Muhammets-iMac:pigon muhammetdilek<span class="nv">$ </span>rails g scaffold Product title:string price:decimal
+</span><span class='line'>      invoke  active_record
+</span><span class='line'>      create    db/migrate/20121003130313_create_products.rb
+</span><span class='line'>      create    app/models/product.rb
+</span><span class='line'>      invoke    test_unit
+</span><span class='line'>      create      <span class="nb">test</span>/unit/product_test.rb
+</span><span class='line'>      create      <span class="nb">test</span>/fixtures/products.yml
+</span><span class='line'>      invoke  api_resource_route
+</span><span class='line'>       route    resources :products, except: :edit
+</span><span class='line'>      invoke  scaffold_controller
+</span><span class='line'>      create    app/controllers/products_controller.rb
+</span><span class='line'>      invoke    test_unit
+</span><span class='line'>      create      <span class="nb">test</span>/functional/products_controller_test.rb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Gördüğünüz gibi <code>model</code>, <code>controller</code> ve <code>test</code> dosyalarından oluşan bir yapı oluşturuldu. Şimdi migration&#8217; ı çalıştıralım.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Muhammets-iMac:pigon muhammetdilek<span class="nv">$ </span>rake db:migrate
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>scaffold</code> tarafından generate edilen <code>ProductsController</code>&#8217; ına baktığımızda sadece <code>JSON</code>formatında veri döndürüldüğünü göreceksiniz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ProductsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="c1"># GET /products</span>
+</span><span class='line'>  <span class="c1"># GET /products.json</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">index</span>
+</span><span class='line'>    <span class="vi">@products</span> <span class="o">=</span> <span class="no">Product</span><span class="o">.</span><span class="n">all</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">render</span> <span class="ss">json</span><span class="p">:</span> <span class="vi">@products</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># GET /products/1</span>
+</span><span class='line'>  <span class="c1"># GET /products/1.json</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">show</span>
+</span><span class='line'>    <span class="vi">@product</span> <span class="o">=</span> <span class="no">Product</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">render</span> <span class="ss">json</span><span class="p">:</span> <span class="vi">@product</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># GET /products/new</span>
+</span><span class='line'>  <span class="c1"># GET /products/new.json</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">new</span>
+</span><span class='line'>    <span class="vi">@product</span> <span class="o">=</span> <span class="no">Product</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">render</span> <span class="ss">json</span><span class="p">:</span> <span class="vi">@product</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># POST /products</span>
+</span><span class='line'>  <span class="c1"># POST /products.json</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">create</span>
+</span><span class='line'>    <span class="vi">@product</span> <span class="o">=</span> <span class="no">Product</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:product</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="vi">@product</span><span class="o">.</span><span class="n">save</span>
+</span><span class='line'>      <span class="n">render</span> <span class="ss">json</span><span class="p">:</span> <span class="vi">@product</span><span class="p">,</span> <span class="ss">status</span><span class="p">:</span> <span class="ss">:created</span><span class="p">,</span> <span class="ss">location</span><span class="p">:</span> <span class="vi">@product</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="n">render</span> <span class="ss">json</span><span class="p">:</span> <span class="vi">@product</span><span class="o">.</span><span class="n">errors</span><span class="p">,</span> <span class="ss">status</span><span class="p">:</span> <span class="ss">:unprocessable_entity</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># PATCH/PUT /products/1</span>
+</span><span class='line'>  <span class="c1"># PATCH/PUT /products/1.json</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">update</span>
+</span><span class='line'>    <span class="vi">@product</span> <span class="o">=</span> <span class="no">Product</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="vi">@product</span><span class="o">.</span><span class="n">update_attributes</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:product</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">head</span> <span class="ss">:no_content</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="n">render</span> <span class="ss">json</span><span class="p">:</span> <span class="vi">@product</span><span class="o">.</span><span class="n">errors</span><span class="p">,</span> <span class="ss">status</span><span class="p">:</span> <span class="ss">:unprocessable_entity</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># DELETE /products/1</span>
+</span><span class='line'>  <span class="c1"># DELETE /products/1.json</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">destroy</span>
+</span><span class='line'>    <span class="vi">@product</span> <span class="o">=</span> <span class="no">Product</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@product</span><span class="o">.</span><span class="n">destroy</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">head</span> <span class="ss">:no_content</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Uygulamamızın hiç <code>HTML</code> view renderlemediğini sadece <code>JSON</code> renderlediğini görüyoruz. Tarayıcımızda <code>/products</code> yolunu ziyaret ettiğimizde <code>JSON</code> formatında henüz ürün eklemediğimiz için boş bir <code>array</code> renderlediğini göreceğiz.</p>
+
+<p><code>curl</code> ile uygulamamıza product ekleyelim.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Muhammets-iMac:pigon muhammetdilek<span class="nv">$ </span>curl -d <span class="s2">&quot;product[title]=Product1&amp;product[price]=3.3&quot;</span> http://pigon.dev/products
+</span><span class='line'><span class="o">{</span><span class="s2">&quot;created_at&quot;</span>:<span class="s2">&quot;2012-10-03T13:27:10Z&quot;</span>,<span class="s2">&quot;id&quot;</span>:3,<span class="s2">&quot;price&quot;</span>:<span class="s2">&quot;3.3&quot;</span>,<span class="s2">&quot;title&quot;</span>:<span class="s2">&quot;Product1&quot;</span>,<span class="s2">&quot;updated_at&quot;</span>:<span class="s2">&quot;2012-10-03T13:27:10Z&quot;</span><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>/products</code> adresini ziyeret ettiğimizde</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">[</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="err">created_at:</span> <span class="nt">&quot;2012-10-03T13:28:27Z&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="err">id:</span> <span class="err">1,</span>
+</span><span class='line'>        <span class="err">price:</span> <span class="nt">&quot;3.3&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="err">title:</span> <span class="nt">&quot;Product1&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="err">updated_at:</span> <span class="nt">&quot;2012-10-03T13:28:27Z&quot;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>JSON</code> formatında eklediğimiz ürünü görüyoruz.</p>
+
+<p>Şimdide uygulamamıza <code>XML</code> desteği ekleyelim.</p>
+
+<p>Burada <code>respond_to</code> metodunu kullanacağız.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">index</span>
+</span><span class='line'>    <span class="vi">@products</span> <span class="o">=</span> <span class="no">Product</span><span class="o">.</span><span class="n">all</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">respond_to</span> <span class="k">do</span> <span class="o">|</span><span class="nb">format</span><span class="o">|</span>
+</span><span class='line'>      <span class="nb">format</span><span class="o">.</span><span class="n">json</span> <span class="p">{</span> <span class="n">render</span> <span class="ss">json</span><span class="p">:</span> <span class="vi">@products</span> <span class="p">}</span>
+</span><span class='line'>      <span class="nb">format</span><span class="o">.</span><span class="n">xml</span> <span class="p">{</span> <span class="n">render</span> <span class="ss">xml</span><span class="p">:</span> <span class="vi">@products</span> <span class="p">}</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>/products.xml</code> sayfasını ziyaret ettiğimizde aşağıdaki hatayı alacağız.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>NoMethodError in ProductsController#index
+</span><span class='line'>
+</span><span class='line'>undefined method <span class="sb">`</span>respond_to<span class="err">&#39;</span> <span class="k">for</span> <span class="c">#&lt;ProductsController:0x007fbc096e1438&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>Rails::API</code> de uygulamayı daha hafif hale getirmek için bir dizi özellik çıkarılmış durumda ama biz istersek bu özellikleri kolayca uygulamalarımza geri ekleyebiliriz. Yukarıdaki aldığımız hata da <code>ActionController::MimeResponds</code> modülü etkin olmadığından kaynaklanıyor. <code>ProductController</code>&#8217; a <code>ActionController::MimeResponds</code> modülünü ekleyelim.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ProductsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="ss">ActionController</span><span class="p">:</span><span class="ss">:MimeResponds</span>
+</span><span class='line'>  <span class="c1">#Actions</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="https://dl.dropbox.com/u/44821222/xml-response.png" alt="xml response" /></p>
+
+<p><code>Rails::API</code> README dosyasında ihtiyacımız çerçevesinde hangi <a href="https://github.com/spastorino/rails-api/blob/master/README.md">modulleri</a> kullanabilecegimiz listelenmiştir. Ancak bu liste modüllerin tam listesi değil. <code>Rails</code> <a href="https://github.com/rails/rails/blob/master/actionpack/lib/action_controller/base.rb#L201">kodları</a> ile <code>Rails::API</code>nin <a href="https://github.com/spastorino/rails-api/blob/master/lib/rails-api/action_controller/api.rb#L124">kodlarını</a> karşılaştırdığımızda bu listedeki eksik olanları görebiliyoruz.</p>
+
+<p>Bazı modülleri kullanmak istediğimizde  modülü sadece controller&#8217; da çağırmak yetmeyebibilir. <code>Rails::API</code> <code>Controller</code>&#8217; ları azalttığı gibi aynı zamanda <code>Rack middleware</code> katmanınıda azaltmıştır. Normal bir rails uygulamasındaki middleware&#8217; lar ile <code>Rails::API</code> gem&#8217; ini kullanarak olulturduğumuz bir uygulamadaki middleware&#8217; ları karşılaştırırsak aşağıdaki middleware&#8217; ların çıkarılmış olduğunu görüyoruz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>use Rack::MethodOverride
+</span><span class='line'>use ActionDispatch::Cookies
+</span><span class='line'>use ActionDispatch::Session::CookieStore
+</span><span class='line'>use ActionDispatch::Flash
+</span><span class='line'>use ActionDispatch::BestStandardsSupport
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>İhtiyacımız çerçevesinde bu middleware&#8217; ları <code>application.rb</code> ye ekleyerek kullanabiliriz.</p>
+
+<p><code>Rails::API</code> kullanırken karşılaşılan sorunların birçoğu issuelarda çözülmüş. https://github.com/rails-api/rails-api/issues?page=1&amp;state=closed   Gözatmakta fayda var.</p>
+
+<p>İyi çalışmalar&#8230;</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Muhammet DİLEK</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-24T17:25:00+02:00" pubdate data-updated="true">Nov 24<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/api/'>api</a>, <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/rails-api/'>rails-api</a>, <a class='category' href='/blog/categories/rest/'>rest</a>, <a class='category' href='/blog/categories/ruby-on-rails/'>ruby-on-rails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://lab2023.github.com/blog/2012/11/24/ruby-on-rails-ile-rails-api-gem-ini-kullanarak-api-gelistirme/" data-via="lab2023" data-counturl="http://lab2023.github.com/blog/2012/11/24/ruby-on-rails-ile-rails-api-gem-ini-kullanarak-api-gelistirme/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/11/01/scp-sunucuya-dosya-gonderip-alma/" title="Previous Post: scp - Sunucuya Dosya Gönderip Alma">&laquo; scp - Sunucuya Dosya Gönderip Alma</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/11/27/ruby-on-rails-rest-api-de-access-token-kullanarak-kullanici-dogrulama/" title="Next Post: Ruby On Rails REST API'de Access Token Kullanarak Kullanıcı Doğrulama">Ruby On Rails REST API'de Access Token Kullanarak Kullanıcı Doğrulama &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/24/octopress-nasil-kullanilir/">Octopress nasıl kullanılır?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/">Rails Projelerinde JQuery Autocomplete Kullanımı</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/25/ruby-on-rails-breadcrumbs-ekmek-kirintisi/">Ruby On Rails Breadcrumbs(Ekmek kırıntısı)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n/">globalize3 ile Çoklu Dil Desteği (I18n)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/21/postgresql-yedek-alma-ve-geri-yukleme/">PostgreSQL Yedek Alma ve Geri Yükleme</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("lab2023", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/lab2023" class="twitter-follow-button" data-show-count="false">Follow @lab2023</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - lab2023 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ssh | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/ssh/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[scp - Sunucuya Dosya Gönderip Alma]]></title>
+    <link href="http://lab2023.github.com/blog/2012/11/01/scp-sunucuya-dosya-gonderip-alma/"/>
+    <updated>2012-11-01T13:06:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2012/11/01/scp-sunucuya-dosya-gonderip-alma</id>
+    <content type="html"><![CDATA[<p>Merhabalar,</p>
+
+<p><code>scp</code> komutunu kullanarak;</p>
+
+<ul>
+<li>Uzak bilgisayar (Sunucu) ile yerel bilgisayar (Locale) arasında</li>
+<li>Uzak bilgisayar ile uzak bilgisayar arasında</li>
+</ul>
+
+
+<p>dosya kopyalama işlemlerini yapabilyoruz.</p>
+
+<!-- more -->
+
+
+<h4>Yerel bilgisayardan den uzak bilgisayara dosya kopyalamak için;</h4>
+
+<p><code>bash
+scp ~/Dropbox/pigonws/_20120731_2255.sql deployer@10.1.2.3:~/apps/backups
+</code></p>
+
+<p>Burada;</p>
+
+<ul>
+<li><p><code>~/Dropbox/pigonws/_20120731_2255.sql</code> : Yerel bilgisayardaki dosyanın yolu.</p></li>
+<li><p><code>deployer@10.1.2.3:~/apps/backups</code> : kullanıcı @ sunucu ip si : sunucudaki yol.</p></li>
+</ul>
+
+
+<p>Komutu çalıştırdıktan sonra ssh ile uzak bilgisayara bağlanıp  yerel bilgisayardaki <code>_20120731_2255.sql</code> dosyasını uzak bilgisayardaki <code>~/apps/backups</code> dizininin altına kopyalıyoruz.</p>
+
+<h4>Uzak bilgisayardan yerel bilgisayara dosya almak için;</h4>
+
+<p><code>bash
+scp deployer@10.1.2.3:~/apps/backups/pigon_production.sql ~/Dropbox/pigonws/
+</code></p>
+
+<h4>Uzak bilgisayardan uzak bilgisayara dosya kopyalamak için;</h4>
+
+<p>Açıkçası bunu hiç denemedim. Şuradaki linkten http://askubuntu.com/questions/153960/scp-with-two-different-ports bakabilrsiniz.</p>
+
+<h3>Parametreler</h3>
+
+<ul>
+<li><code>-P</code> : SSH portunu belirtme.</li>
+<li><code>-q</code> : Progress barı gösterme.</li>
+<li><code>-r</code> : Klasör kopyalayacaksak.</li>
+<li><code>-v</code> : Debug mesajlarını göster.</li>
+</ul>
+
+
+<p>İyi çalışmalar...</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sunucunun ssh portunu değiştirme]]></title>
+    <link href="http://lab2023.github.com/blog/2012/10/22/sunucunun-ssh-portunu-degistirme/"/>
+    <updated>2012-10-22T15:14:00+03:00</updated>
+    <id>http://lab2023.github.com/blog/2012/10/22/sunucunun-ssh-portunu-degistirme</id>
+    <content type="html"><![CDATA[<p><code>ssh</code> portu default olarak 22 dir. Güvenlik için istersek bunu değiştirebiliyoruz.</p>
+
+<p><code>nano</code> ile <code>/etc/ssh/</code> dizinindeki <code>sshd_config</code> dosyasını açıp 5. satırdaki <code>Port 22</code> yazan yerdeki <code>22</code> portunu değiştirip kaydediyoruz.</p>
+
+<p><code>bash
+$ sudo nano /etc/ssh/sshd_config
+</code></p>
+
+<p>Değişiklikler algılaması için aşağıdaki komut ile <code>ssh</code>' ı yeniden başlatıyoruz.</p>
+
+<p><code>bash
+$ sudo /etc/init.d/ssh restart
+</code></p>
+
+<p>Localden bağlanırken portu belirtiyoruz.</p>
+
+<p><code>bash
+$ ssh root@x.x.x.x -p 9387
+</code></p>
+
+<p>-p parametresi ile portu belirtmiş olduk.</p>
+
+<p>Eğer deploy işlemleri için <code>Capistrano</code> kullanıyorsak <code>deploy.rb</code> dosyasında aşağıdaki gibi portu belirtiyoruz.</p>
+
+<p><code>ruby
+set :port, 30000
+</code></p>
+
+<p>İyi çalışmalar</p>
+]]></content>
+  </entry>
+  
+</feed>

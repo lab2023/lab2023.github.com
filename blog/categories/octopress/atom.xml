@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: octopress | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/octopress/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Octopress nasıl kullanılır?]]></title>
+    <link href="http://lab2023.github.com/blog/2013/02/24/octopress-nasil-kullanilir/"/>
+    <updated>2013-02-24T13:13:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2013/02/24/octopress-nasil-kullanilir</id>
+    <content type="html"><![CDATA[<p>Belli bir süre Octopress'i mercek altına alacağız.</p>
+
+<!-- more -->
+
+
+<h2>Yeni post yazma</h2>
+
+<p><code>
+rake new_post["title"]
+</code></p>
+
+<p><code>source</code> brancheında <code>_post</code> dizininde yeni dosyayı görüyoruz. Buradan author, categories'i düzenliyoruz.</p>
+
+<h2>```</h2>
+
+<p>layout: post
+title: "Octopress nasıl kullanılır?"
+date: 2013-02-24 13:13
+comments: true
+author: Onur Özgür ÖZKAN</p>
+
+<h2>categories: octopress</h2>
+
+<p>```</p>
+
+<p>Sonra markdown stadanartında makalemizi yazıyoruz.</p>
+
+<h2>Generate ve Preview işlemleri</h2>
+
+<p><code>
+rake generate   # Generates posts and pages into the public directory
+rake watch      # Watches source/ and sass/ for changes and regenerates
+rake preview    # Watches, and mounts a webserver at http://localhost:4000
+</code></p>
+
+<h2>Deploy etmeyi unutmayın</h2>
+
+<p>Publish için</p>
+
+<p><code>
+rake generate
+rake deploy
+</code></p>
+
+<p>Source kodlarıda source branchına gönderiyoruz.</p>
+
+<p><code>
+git add .
+git commit -m 'your message'
+git push origin source
+</code></p>
+
+<p>Şimdilik bu kadar...</p>
+]]></content>
+  </entry>
+  
+</feed>

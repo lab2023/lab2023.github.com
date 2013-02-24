@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Ruby'de String Replace (String Degistirme) - lab2023 - internet teknolojileri</title>
+  <meta name="author" content="lab2023">
+
+  
+  <meta name="description" content="PHP de kullandığımız str_replace() fonksiyonu yok tabi :). Ruby de string değiştirme için bir kaç fonksiyon bulunmakta. İlk fonksiyonu tr() &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://lab2023.github.com/blog/2012/03/06/rubyde-str-replace-string-degistirme/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="lab2023 - internet teknolojileri" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">lab2023 - internet teknolojileri</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:lab2023.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Ruby'de String Replace (String Degistirme)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-06T21:28:00+02:00" pubdate data-updated="true">Mar 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>PHP de kullandığımız <code>str_replace()</code> fonksiyonu yok tabi :). Ruby de string değiştirme için bir kaç fonksiyon bulunmakta. İlk fonksiyonu <code>tr()</code> inceleyelim.</p>
+
+<p>String içerisinde karakter değiştirmek istiyorsak;</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;Merhaba&quot;</span><span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="s2">&quot;aeiou&quot;</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;M*rh*b*&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Görüldüğü gibi &#8220;hello&#8221; stringindeki &#8220;a&#8221;, &#8220;e&#8221;, &#8220;i&#8221;, &#8220;o&#8221;, &#8220;u&#8221; karakterlerini &#8220;*&#8221; karakterine çeviriyor.</p>
+
+<p>Eğer bir string içerisindeki sembolleri kaldırmak istersek;</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;Merhaba !@#$%^&amp;*()_+ Ruby!&quot;</span><span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="s2">&quot;!@#$%^&amp;*()_+&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Merhaba Ruby&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<!-- more -->
+
+
+<p><code>tr</code> fonksiyonu ile bir cümle içindeki bir kelimeyi değiştirmek isteyelim;</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Merahaba Ruby !&quot;</span> <span class="c1">#&quot;Merhaba Ruby !&quot;</span>
+</span><span class='line'><span class="n">message</span><span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="s2">&quot;Ruby&quot;</span><span class="p">,</span> <span class="s2">&quot;Rails&quot;</span><span class="p">)</span> <span class="c1">#&quot;Merahaia Rail !&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&#8220;Ruby&#8221; yi &#8220;Rails&#8221; e çevirmek istedik ama başarılı olamadık :(.</p>
+
+<p>Örnektende anlaşıldığı gibi <code>tr()</code> fonksiyonu karakter karakter işlem yapıyor. Bizi burada kurtaracak olan fonksiyon
+ise <code>gsub()</code>. <code>gsub()</code> fonksiyonu ile biraz önceki örnekte yapmaya çalışıtığımızı artık yapabiliriz :).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Merahaba Ruby !&quot;</span> <span class="c1">#&quot;Merhaba Ruby !&quot;</span>
+</span><span class='line'><span class="n">message</span><span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="s2">&quot;Ruby&quot;</span><span class="p">,</span> <span class="s2">&quot;Rails&quot;</span><span class="p">)</span> <span class="c1">#&quot;Merhaba Rails !&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Görüldüğü gibi &#8220;Ruby&#8221; stringini &#8220;Rails&#8221; stringine çevirmiş bulunuyoruz. Eğer bir tane daha &#8220;Ruby&#8221; stringi olsaydı onuda değiştirecekti.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Merahaba Ruby Ruby !&quot;</span> <span class="c1">#&quot;Merhaba Ruby Ruby!&quot;</span>
+</span><span class='line'><span class="n">message</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="s2">&quot;Ruby&quot;</span><span class="p">,</span> <span class="s2">&quot;Rails&quot;</span><span class="p">)</span> <span class="c1">#&quot;Merhaba Rails Rails!&quot;`</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Şimdide şöyle bir örnek bir şey yapalım.</p>
+
+<p><em>&#8220;Laboratuvarda <strong>30</strong> Dell, <strong>20</strong> Casper, 5 Mac Bilgisayar bulunmaktadır.&#8221;</em></p>
+
+<p>Cümlesini şöyle yapalım;</p>
+
+<p><em>&#8220;Labarotuvarda <strong>biraz</strong> Dell, <strong>biraz</strong> Casper, 5 Mac Bilgisayar bulunmaktadır.&#8221;</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;Laboratuvarda 30 Dell, 20 Casper, 5 Mac Bilgisayar bulunmaktadır.&quot;</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/[0-9][0-9]/</span><span class="p">,</span> <span class="s1">&#39;biraz&#39;</span><span class="p">)</span> <span class="c1">#Labarotuvarda biraz Dell, biraz Casper, 5 Mac Bilgisayar bulunmaktadır.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Umarım faydalı olmuştur. İyi çalışmalar&#8230;</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Muhammet DİLEK</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-06T21:28:00+02:00" pubdate data-updated="true">Mar 6<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://lab2023.github.com/blog/2012/03/06/rubyde-str-replace-string-degistirme/" data-via="lab2023" data-counturl="http://lab2023.github.com/blog/2012/03/06/rubyde-str-replace-string-degistirme/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/02/26/bety-url-kisaltma-servisi/" title="Previous Post: Bety Url K&#305;saltma Servisi">&laquo; Bety Url K&#305;saltma Servisi</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/03/31/rails-projelerinde-heroku-scheduler-kullanimi/" title="Next Post: Rails Projelerinde Heroku Scheduler Kullanımı">Rails Projelerinde Heroku Scheduler Kullanımı &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/24/octopress-nasil-kullanilir/">Octopress nasıl kullanılır?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/">Rails Projelerinde JQuery Autocomplete Kullanımı</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/25/ruby-on-rails-breadcrumbs-ekmek-kirintisi/">Ruby On Rails Breadcrumbs(Ekmek kırıntısı)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n/">globalize3 ile Çoklu Dil Desteği (I18n)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/21/postgresql-yedek-alma-ve-geri-yukleme/">PostgreSQL Yedek Alma ve Geri Yükleme</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("lab2023", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/lab2023" class="twitter-follow-button" data-show-count="false">Follow @lab2023</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - lab2023 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

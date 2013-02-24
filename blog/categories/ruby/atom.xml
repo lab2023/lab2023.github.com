@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Ruby | lab2023 - internet teknolojileri]]></title>
+  <link href="http://lab2023.github.com/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://lab2023.github.com/"/>
+  <updated>2013-02-24T13:26:13+02:00</updated>
+  <id>http://lab2023.github.com/</id>
+  <author>
+    <name><![CDATA[lab2023]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby’ de Değişkenler ve Veri Türleri]]></title>
+    <link href="http://lab2023.github.com/blog/2012/04/09/ruby-de-degiskenler-ve-veri-turleri/"/>
+    <updated>2012-04-09T19:50:00+03:00</updated>
+    <id>http://lab2023.github.com/blog/2012/04/09/ruby-de-degiskenler-ve-veri-turleri</id>
+    <content type="html"><![CDATA[<p><img class="left" src="http://www.gelistiricigunlugu.com/wp-content/uploads/2012/04/ruby.png" title="Ruby’ de Değişkenler ve Veri Türleri" ></p>
+
+<p>Ruby’ de Değişkenler ve Veri Türleri ile ilgili bir yazı yazdım. İlgili yazıya şuradan ulaşabilirsiniz. <a href="http://www.gelistiricigunlugu.com/ruby-de-degiskenler-ve-veri-turleri-2/">http://www.gelistiricigunlugu.com/ruby-de-degiskenler-ve-veri-turleri-2/</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby'de String Replace (String Degistirme)]]></title>
+    <link href="http://lab2023.github.com/blog/2012/03/06/rubyde-str-replace-string-degistirme/"/>
+    <updated>2012-03-06T21:28:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2012/03/06/rubyde-str-replace-string-degistirme</id>
+    <content type="html"><![CDATA[<p>PHP de kullandığımız <code>str_replace()</code> fonksiyonu yok tabi :). Ruby de string değiştirme için bir kaç fonksiyon bulunmakta. İlk fonksiyonu <code>tr()</code> inceleyelim.</p>
+
+<p>String içerisinde karakter değiştirmek istiyorsak;
+<code>ruby
+"Merhaba".tr("aeiou", "*") # =&gt; "M*rh*b*"
+</code></p>
+
+<p>Görüldüğü gibi "hello" stringindeki "a", "e", "i", "o", "u" karakterlerini "*" karakterine çeviriyor.</p>
+
+<p>Eğer bir string içerisindeki sembolleri kaldırmak istersek;</p>
+
+<p><code>ruby
+"Merhaba !@#$%^&amp;*()_+ Ruby!".tr("!@#$%^&amp;*()_+", "") # =&gt; "Merhaba Ruby"
+</code></p>
+
+<!-- more -->
+
+
+<p><code>tr</code> fonksiyonu ile bir cümle içindeki bir kelimeyi değiştirmek isteyelim;</p>
+
+<p><code>ruby
+message = "Merahaba Ruby !" #"Merhaba Ruby !"
+message.tr("Ruby", "Rails") #"Merahaia Rail !"
+</code></p>
+
+<p>"Ruby" yi "Rails" e çevirmek istedik ama başarılı olamadık :(.</p>
+
+<p>Örnektende anlaşıldığı gibi <code>tr()</code> fonksiyonu karakter karakter işlem yapıyor. Bizi burada kurtaracak olan fonksiyon
+ise <code>gsub()</code>. <code>gsub()</code> fonksiyonu ile biraz önceki örnekte yapmaya çalışıtığımızı artık yapabiliriz :).</p>
+
+<p><code>ruby
+message = "Merahaba Ruby !" #"Merhaba Ruby !"
+message.tr("Ruby", "Rails") #"Merhaba Rails !"
+</code></p>
+
+<p>Görüldüğü gibi "Ruby" stringini "Rails" stringine çevirmiş bulunuyoruz. Eğer bir tane daha "Ruby" stringi olsaydı onuda değiştirecekti.</p>
+
+<p><code>ruby
+message = "Merahaba Ruby Ruby !" #"Merhaba Ruby Ruby!"
+message.gsub("Ruby", "Rails") #"Merhaba Rails Rails!"`
+</code></p>
+
+<p>Şimdide şöyle bir örnek bir şey yapalım.</p>
+
+<p><em>"Laboratuvarda <strong>30</strong> Dell, <strong>20</strong> Casper, 5 Mac Bilgisayar bulunmaktadır."</em></p>
+
+<p>Cümlesini şöyle yapalım;</p>
+
+<p><em>"Labarotuvarda <strong>biraz</strong> Dell, <strong>biraz</strong> Casper, 5 Mac Bilgisayar bulunmaktadır."</em></p>
+
+<p><code>ruby
+"Laboratuvarda 30 Dell, 20 Casper, 5 Mac Bilgisayar bulunmaktadır.".gsub(/[0-9][0-9]/, 'biraz') #Labarotuvarda biraz Dell, biraz Casper, 5 Mac Bilgisayar bulunmaktadır.
+</code></p>
+
+<p>Umarım faydalı olmuştur. İyi çalışmalar...</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby On Rails' te Nas&#305;l API Yaz&#305;l&#305;r]]></title>
+    <link href="http://lab2023.github.com/blog/2012/01/01/ruby-on-rails-te-nasil-api-yazilir/"/>
+    <updated>2012-01-01T12:45:00+02:00</updated>
+    <id>http://lab2023.github.com/blog/2012/01/01/ruby-on-rails-te-nasil-api-yazilir</id>
+    <content type="html"><![CDATA[<p><img class="left" src="http://www.gelistiricigunlugu.com/wp-content/uploads/2011/12/ruby-on-rails.png" width="200" height="200" title="How to write API in Rails #3" >
+Merhabalar.Ge&ccedil;enlerde Ruby On Rails te API  Yaz&#305;m&#305; ile ilgili bir makale yazd&#305;m.
+<a href="http://www.gelistiricigunlugu.com/ruby-on-rails-te-api-yazalim/">http://www.gelistiricigunlugu.com/ruby-on-rails-te-api-yazalim/</a></p>
+]]></content>
+  </entry>
+  
+</feed>

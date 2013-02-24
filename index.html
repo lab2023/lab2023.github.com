@@ -9,7 +9,7 @@
   <meta name="author" content="lab2023">
 
   
-  <meta name="description" content=" Blog Archives Recent Posts Latest Tweets Status updating&#8230; $.domReady(function(){ getTwitterFeed("lab2023", 4, false); }); Follow @lab2023 ">
+  <meta name="description" content="Belli bir süre Octopress&#8217;i mercek altına alacağız. ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,7 +63,1178 @@
       <div class="blog-index">
   
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/24/octopress-nasil-kullanilir/">Octopress Nasıl Kullanılır?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-24T13:13:00+02:00" pubdate data-updated="true">Feb 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Belli bir süre Octopress&#8217;i mercek altına alacağız.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/02/24/octopress-nasil-kullanilir/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/">Rails Projelerinde JQuery Autocomplete Kullanımı</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-27T14:43:00+02:00" pubdate data-updated="true">Jan 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Bunun için <a href="http://jqueryui.com/">jQuery UI</a> kütüphanesine ihtiyacımız var. Kütüphaneyi projemize eklemek için <a href="https://github.com/joliss/jquery-ui-rails">jquery-ui-rails</a> gemini kulanacağız. Gemfile dosyasına gemi <code>gem "jquery-ui-rails"</code> ekledikten sonra <code>bundle install</code> komutunu çalıştıralım.
+Javascript kütüphanesini çağırmak için <code>application.js</code> dosyasına</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//= require jquery.ui.autocomplete</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Css kütüphanesini çağırmak için <code>application.css.scss</code> dosyasına</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="c">/*</span>
+</span><span class='line'><span class="c">*= require jquery.ui.autocomplete</span>
+</span><span class='line'><span class="c">*/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>satırlarını ekleyelim.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/25/ruby-on-rails-breadcrumbs-ekmek-kirintisi/">Ruby on Rails Breadcrumbs(Ekmek Kırıntısı)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-25T13:40:00+02:00" pubdate data-updated="true">Jan 25<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Breadcrumb için <a href="http://www.simonecarletti.com/code/breadcrumbs_on_rails/">breadcrumbs_on_rails</a> gemini kullanıyoruz. Gemfile&#8217; a <code>gem 'breadcrumbs_on_rails'</code> ekledikten sonra <code>bundle:install</code> komutunu çalıştırarak gemi kuralım. Controller&#8217; da <code>add_breadcrumb</code> metodunu çağırarak breadcrumb ekleyebiliyoruz. View katmanında ise <code>render_breadcrumbs</code> helper&#8217; ı kullanıyoruz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Admins</span><span class="o">::</span><span class="no">ApplicationController</span> <span class="o">&lt;</span> <span class="ss">ActionController</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">add_breadcrumb</span> <span class="s2">&quot;Dashboard&quot;</span><span class="p">,</span> <span class="ss">:admins_dashboard_index_path</span> <span class="c1">#I18n.t(&#39;nav.dashboard&#39;)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/01/25/ruby-on-rails-breadcrumbs-ekmek-kirintisi/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n/">Globalize3 Ile Çoklu Dil Desteği (I18n)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-24T14:29:00+02:00" pubdate data-updated="true">Jan 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Model katmanına I18n desteği eklemek için <a href="https://github.com/svenfuchs/globalize3">globalize3</a> gemini kullanıyoruz.</p>
+
+<p>Gemfile&#8217; a <code>gem 'globalize3'</code> ekleyip <code>bundle install</code> ile gemi kuralım.</p>
+
+<p>Modelde I18n desteği eklenilecek fieldları belirtiyoruz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Country</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">attr_accessible</span> <span class="ss">:name</span>
+</span><span class='line'>  <span class="n">translates</span> <span class="ss">:name</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/21/postgresql-yedek-alma-ve-geri-yukleme/">PostgreSQL Yedek Alma Ve Geri Yükleme</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-21T18:38:00+02:00" pubdate data-updated="true">Jan 21<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h4><code>pg_dump</code></h4>
+
+<p><code>pg_dump veritabaniadi -f dosyaadi.dump</code></p>
+
+<ul>
+<li>1 vt yedeği alır.</li>
+<li>Öntanımlı olarak düz metin yedek alır.</li>
+<li><p>Yedeği sıkıştırabilir.
+<code>pg_dump -Fc veritabaniadi -f dosyaadi.dump</code></p></li>
+<li><p>Global veriyi almaz. (User, tablespace)</p></li>
+<li>Sıkıştırılmış yedeği tablo bazında açma imkanı. Sadece sıkıştırılmış formattayken.</li>
+<li>Sadece istenilen tabloların yedeğini alma
+<code>-t "satislar."</code> satislar tablosunun yedeğini al. <code>-T satislar</code> satislar dışındaki tabloların yedeğini al.</li>
+<li>Sadece schema yı yedek alma
+<code>-s</code></li>
+<li>Sadece dataları almak.
+<code>-a</code></li>
+</ul>
+
+
+<h4><code>pg_dumpall</code></h4>
+
+<ul>
+<li>Tüm veritabanlarının yedeğini tek dosyaya alır.</li>
+<li>Sadece düz metin olarak yedek alır.(.sql)</li>
+<li>Bir tablo veya database açılamaz. Yedekler olduğu gibi geri yüklenir.</li>
+<li>Global bilgileri ayrı olarak yedekleyebilirsiniz.
+<code>pg_dumpall -g -f dosyaadi.dump</code></li>
+<li>Sadece schema yı yedek alma
+<code>-s</code></li>
+<li>Sadece dataları almak.
+<code>-a</code></li>
+</ul>
+
+
+<p><code>pg_dump</code> &amp; <code>pg_dumpall</code></p>
+
+<ul>
+<li><code>INSERT</code> li yedek almaz. Bunun yerine <code>COPY</code> kullanılır. Sebebi her <code>INSERT</code> işleminin <code>TRANSACTION</code> içerisinde olmasıdır.</li>
+</ul>
+
+
+<p>Kesinlikle <code>pg_dump</code> kullanın, yedeği sıkıştırın, global bilgileri <code>pg_dumpall</code> ile alın. Geri yüklerken önce global veriler yüklenir.</p>
+
+<h3><code>pg_restore</code></h3>
+
+<ul>
+<li><code>pg_restore -d veritabaniadi yedek.dump -j 4</code></li>
+<li>Sadece sıkıştırlmış verileri geri yükler.</li>
+<li><code>-j</code> parelel oturum.</li>
+</ul>
+
+
+<p><a href="http://ab.org.tr/ab13/postgresql.html">ab2013 postgresql</a> eğitim notlarından.</p>
+
+<p>İyi çalışmalar.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/23/ruby-on-rails-application-template-olusturma/">Ruby on Rails Application Template Oluşturma</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-23T17:00:00+02:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>Template nedir ?</h3>
+
+<p>Yeni bir <code>rails</code> uygulaması oluştururken genel görevleri otomatikleştirmek için yardımcı <code>ruby</code> script. Örneğin her <code>rails</code> projesinde <code>devise</code> gemini kullanıyorsak bunu her seferinde eklemek yerine template&#8217; e ekleyip aynı işlemleri tekrarlamaktan kurtulabiliriz.</p>
+
+<h3>Template Oluşturma</h3>
+
+<p>Template oluşturmak için ne bir <code>generator</code> nede bir <code>gem</code> kullancağız. İçerisine bazı metodlar yazabileceğimiz bir <code>ruby</code> dosyası yeterli :)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/12/23/ruby-on-rails-application-template-olusturma/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/20/deploy-islemleri-checklist-im/">Deploy İşlemleri Checklist&#8217;im</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-20T17:05:00+02:00" pubdate data-updated="true">Dec 20<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Deploy ederken birşeyleri atlamamak için kendime bir checklist oluşturdum. Deploy için <a href="https://github.com/capistrano/capistrano">Capistrano</a> kullanıyoruz.</p>
+
+<h3>Branch Merge işlemleri</h3>
+
+<p><strong>Merge işlemlerini kesinlikle komut satırından yapın.</strong></p>
+
+<ul>
+<li>Merge edilecek branch taki tüm kodların güncel olduğundan emin olun.</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">git</span> <span class="n">checkout</span> <span class="n">develop</span>
+</span><span class='line'><span class="n">git</span> <span class="n">pull</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>Kodları test edin</p></li>
+<li><p><strong>Üçüncü part <code>javascript</code>,  <code>css</code> dosyaları varmı bakın.</strong></p></li>
+<li><p><strong>Varsa bunlar <code>environments/production.rb</code> ye eklenmişmi ona bakın. Assets precompile için.</strong></p></li>
+<li><p>Kendisine merge yapılcak branch&#8217; taki kodların güncel olduğundan emin olun.</p></li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">git</span> <span class="n">checkout</span> <span class="n">master</span>
+</span><span class='line'><span class="n">git</span> <span class="n">pull</span>
+</span><span class='line'><span class="n">git</span> <span class="n">merge</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">ff</span> <span class="n">develop</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><code>config/deploy.rb</code> dosyasını kontrol edin. IP, user, port&#8230;</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/12/20/deploy-islemleri-checklist-im/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/19/paperclip-dosyalari-yeni-bir-yol-path-a-tasimak/">Paperclip: Dosyaları Yeni Bir Yol (Path)&#8217; a Taşımak</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-19T17:08:00+02:00" pubdate data-updated="true">Dec 19<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Dosya upload işlemleri için genellikle <a href="https://github.com/thoughtbot/paperclip">Paperclip</a> kulanıyoruz.  Paperclipte <code>:path</code> parametresi ile dosyanın hangi path altına kaydedeliceğini belirtebiliyoruz. <code>Product</code> modelindeki <code>:picture</code> için bir path belirledik. Dosyalar <code>public/system/products/pictures/</code> dizinin altına <code>:style(original, icon, small, large)</code> klasörününde içine <code>"#{id}-#{name.parameterize}.format"</code> olarak kaydedilyor. Linklerde <code>http://localhost:3000/system/products/pictures/original/1-bilgisayar.jpeg</code> şeklinde oluyor. Peki biz bu path&#8217; i ürün production&#8217; a çıktıktan sonra değiştirirsek ne olur ?. Ne olacak tüm dosya linkleri patlayacak :) Yani eski dosyaları yeni path ile tekrar kaydettirmemiz gerekecek.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/12/19/paperclip-dosyalari-yeni-bir-yol-path-a-tasimak/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/16/ruby-on-rails-te-ransack-gem-i-ile-arama/">Ruby on Rails&#8217; Te Ransack Gem&#8217; I Ile Arama</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-16T17:19:00+02:00" pubdate data-updated="true">Dec 16<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/ernie/ransack/"><code>Ransack</code></a> ile kolay bir şekilde arama ve sıralama işlemlerini yapabiliyoruz. <code>Gemfile</code> dosyasına</p>
+
+<p><code>gem 'ransack'</code> satırını ekledikten sonra <code>bundle install</code> ile kuralım.</p>
+
+<p>Arama için <code>search</code> metodunu kullanıyoruz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&gt;&gt;</span> <span class="no">Product</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="ss">:name_cont</span> <span class="o">=&gt;</span> <span class="s2">&quot;aaaa&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">to_sql</span>
+</span><span class='line'><span class="s2">&quot;SELECT `products`.* FROM `products`  WHERE (`products`.`name` LIKE &#39;%aaaa%&#39;)&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Aynı anda iki alanda arama yapmak istersek <code>or</code> kullanıyoruz.</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&gt;&gt;</span> <span class="no">Product</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="ss">:name_or_barcode_cont</span> <span class="o">=&gt;</span> <span class="s2">&quot;aaaa&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">to_sql</span>
+</span><span class='line'><span class="s2">&quot;SELECT `products`.* FROM `products`  WHERE ((`products`.`name` LIKE &#39;%aaaa%&#39; OR `products`.`barcode` LIKE &#39;%aaaa%&#39;))&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/12/16/ruby-on-rails-te-ransack-gem-i-ile-arama/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/07/ruby-on-rails-te-excel-export/">Ruby on Rails&#8217;te Excel Export</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-07T17:21:00+02:00" pubdate data-updated="true">Dec 7<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Excel export işlemlerinde <a href="https://github.com/splendeo/to_xls"><code>to_xls</code></a> gemini kullanıyoruz. Export edilen excel dosyaları <code>xls</code> uzantısında oluyor.</p>
+
+<p>Excel renderlermek için <code>config/initializers/mime_types.rb</code> doyasına mime type eklemeyi unutmuyalım.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">Mime</span><span class="p">:</span><span class="ss">:Type</span><span class="o">.</span><span class="n">register</span> <span class="s2">&quot;application/vnd.ms-excel&quot;</span><span class="p">,</span> <span class="ss">:xls</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Gemfile dosyasına <code>gem 'to_xls'</code> ekleyip <code>bundle install</code> ile kuruyoruz.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/12/07/ruby-on-rails-te-excel-export/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/27/ruby-on-rails-rest-api-de-access-token-kullanarak-kullanici-dogrulama/">Ruby on Rails REST API&#8217;de Access Token Kullanarak Kullanıcı Doğrulama</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-27T17:23:00+02:00" pubdate data-updated="true">Nov 27<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Öncelikle;</p>
+
+<ul>
+<li><p><code>HTTPS</code> kullanın. Çünkü <code>HTTP</code> kullanıldığında  parametreler plain text olarak iletiliyor. <code>Http Request</code>&#8217; leri dinleyen birisi keylerinize çok rahat ulaşabilir.</p></li>
+<li><p><code>access_token</code>&#8217; ları url den parametre olarak almak yerine <code>Http Header</code>&#8217; dan almak daha uygundur. Çünkü kullanıcı alışkanlıkları  (kopyala-yapıştır-test et) yönündedir. URL de unutulan tokenlar güvenlik için tehlikeli olabilir.</p></li>
+</ul>
+
+
+<p>Kullanıcı doğrulama ile ilgili daha önce yazdığım <a href="http://muhammetdilek.dudupress.com/articles/ruby-on-rails-rest-api-de-http-basic-authentication-kullanarak-kullanici-dogrulama">Ruby On Rails REST API&#8217; de HTTP Basic Authentication Kullanarak Kullanıcı Doğrulama
+</a> yazısını okuyabilirsiniz.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/11/27/ruby-on-rails-rest-api-de-access-token-kullanarak-kullanici-dogrulama/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/24/ruby-on-rails-ile-rails-api-gem-ini-kullanarak-api-gelistirme/">Ruby on Rails Ile Rails::API Gem&#8217;ini Kullanarak API Geliştirme</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-24T17:25:00+02:00" pubdate data-updated="true">Nov 24<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Daha önce API geliştirme ile ilgili <a href="http://www.gelistiricigunlugu.com/ruby-on-rails-te-api-yazalim/">Ruby On Rails’ te API Yazalım</a> başlıklı bir yazı yazmıştım. Bu yazımda ise <code>Rails::API</code> gem&#8217; ini kullanarak <code>API</code> geliştirmeyi anlatacağım.</p>
+
+<p><code>Rails::API</code> bir <code>API</code> için gerekli olan kütüphaneler dışındaki kütüphaneleri çıkararak(view, assests &#8230;), normal bir rails projesine göre daha hafif bir proje oluşturabilmemizi sağlayan gem.</p>
+
+<p>Aşağıdaki komutu çalıştırarak gem&#8217; i yükleyelim</p>
+
+<p><code>gem install rails-api</code></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/11/24/ruby-on-rails-ile-rails-api-gem-ini-kullanarak-api-gelistirme/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/01/scp-sunucuya-dosya-gonderip-alma/">Scp - Sunucuya Dosya Gönderip Alma</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-01T13:06:00+02:00" pubdate data-updated="true">Nov 1<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Merhabalar,</p>
+
+<p><code>scp</code> komutunu kullanarak;</p>
+
+<ul>
+<li>Uzak bilgisayar (Sunucu) ile yerel bilgisayar (Locale) arasında</li>
+<li>Uzak bilgisayar ile uzak bilgisayar arasında</li>
+</ul>
+
+
+<p>dosya kopyalama işlemlerini yapabilyoruz.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/11/01/scp-sunucuya-dosya-gonderip-alma/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/23/mysql-root-sifresini-resetleme/">MySQL Root şifresini Resetleme</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-23T15:22:00+03:00" pubdate data-updated="true">Oct 23<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>root</code> şifreside unutulurmu demeyin valla unutuluyor :)</p>
+
+<ul>
+<li><code>MySQL</code> server durdulur</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>service mysql stop
+</span><span class='line'><span class="c"># veya</span>
+</span><span class='line'><span class="nv">$ </span>sudo /etc/init.d/mysql stop
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><code>--skip-grant-tables</code> parametresi ile güvenli modda tekrar başlatalım. Güvenli modda başlatınca yetkilerin hiçbirisi dikkate alınmayacak.</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo mysqld_safe --skip-grant-tables
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><code>MySQL</code> konsoluna giriş yapalım</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mysql -u root
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><code>root</code> şifresini değiştirelim</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mysql&gt; use mysql;
+</span><span class='line'>mysql&gt; update user <span class="nb">set </span><span class="nv">password</span><span class="o">=</span>PASSWORD<span class="o">(</span><span class="s2">&quot;NEWPASSWORD&quot;</span><span class="o">)</span> where <span class="nv">User</span><span class="o">=</span><span class="s1">&#39;root&#39;</span>;
+</span><span class='line'>mysql&gt; flush privileges;
+</span><span class='line'>mysql&gt; quit
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><code>MySQL</code> sunucusunu başlatalım</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>service mysql start
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>İyi çalışmalar&#8230;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/23/mysqlde-yeni-veritabani-ve-veritabani-kullancisi-olusturma/">MySQL&#8217;de Yeni Veritabanı Ve Veritabanı Kullancısı Oluşturma</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-23T13:04:00+03:00" pubdate data-updated="true">Oct 23<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><ul>
+<li><code>MySQL</code>&#8217; e login olalım</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mysql -u root -p
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Veritabanı oluşturalım</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='mysql'><span class='line'><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="n">pigon_production</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>pigon_production</code> isminde bir veritabanı oluşturduk.</p>
+
+<ul>
+<li>Şimdide bir kullanıcı oluşturalım ve <code>pigon_production</code>&#8217; ı kullanabilmesi için yetki verelim.</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='mysql'><span class='line'><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">GRANT</span> <span class="k">ALL</span> <span class="k">ON</span> <span class="n">pigon_production</span><span class="p">.</span><span class="o">*</span> <span class="k">TO</span> <span class="s1">&#39;pigon&#39;</span><span class="o">@</span><span class="n">localhost</span> <span class="n">IDENTIFIED</span> <span class="k">BY</span> <span class="s1">&#39;pigon_password&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">FLUSH</span> <span class="n">PRIVILEGES</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Artık <code>pigon</code> kullanıcısı oluşturuldu ve <code>pigon_production</code> veritabanını kullanma yetkisi verildi. Buradaki yetki <code>GRANT ALL</code> komutundan da anlaşılacağı gibi veritabanı üzerinde tüm işlemleri yapabilme yetkisidir.</p>
+
+<p>Kolaylıklar&#8230;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/22/sunucunun-ssh-portunu-degistirme/">Sunucunun Ssh Portunu Değiştirme</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-22T15:14:00+03:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>ssh</code> portu default olarak 22 dir. Güvenlik için istersek bunu değiştirebiliyoruz.</p>
+
+<p><code>nano</code> ile <code>/etc/ssh/</code> dizinindeki <code>sshd_config</code> dosyasını açıp 5. satırdaki <code>Port 22</code> yazan yerdeki <code>22</code> portunu değiştirip kaydediyoruz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo nano /etc/ssh/sshd_config
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Değişiklikler algılaması için aşağıdaki komut ile <code>ssh</code>&#8217; ı yeniden başlatıyoruz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo /etc/init.d/ssh restart
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Localden bağlanırken portu belirtiyoruz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>ssh root@x.x.x.x -p 9387
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>-p parametresi ile portu belirtmiş olduk.</p>
+
+<p>Eğer deploy işlemleri için <code>Capistrano</code> kullanıyorsak <code>deploy.rb</code> dosyasında aşağıdaki gibi portu belirtiyoruz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:port</span><span class="p">,</span> <span class="mi">30000</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>İyi çalışmalar</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/22/mysql-de-kullanici-sifrelerini-degistirme/">Mysql&#8217;de Kullanıcı şifrelerini Değiştirme</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-22T15:10:00+03:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>MySQL şifre değiştirme işlemleri için kullandığım iki yöntem var. Onlardan bahsedeceğim.</p>
+
+<h3><code>mysqladmin</code> komutunu kullanarak</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mysqladmin -u root -pcurrentpassword password <span class="s1">&#39;newpassword&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>-p<strong>currentpassword</strong> teki <code>p</code> ile <code>currentpassword</code> bitişik. Bu alana şimdiki şifremizi <code>newpassword</code> alanınan da yeni şifremizi yazıyoruz.</p></blockquote>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/22/mysql-de-kullanici-sifrelerini-degistirme/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/22/ubuntu-makine-uzerinde-kullanici-sifrelerini-degistirme/">Ubuntu Makine üzerinde Kullanıcı şifrelerini Değiştirme</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-22T15:08:00+03:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>root</code> olarak oturum açtıktan sonra;</p>
+
+<ul>
+<li><code>passwd</code> komutunu çalıştırarak root şifresini</li>
+<li><code>passwd username</code> komutunu çalıştırarak diğer kullanıcların şifrelerini değiştirebiliriz.</li>
+</ul>
+
+
+<p>Kolaylıklar&#8230;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/22/mysqldump-ile-veritabani-yedegi-alma/">Mysqldump Ile Veritabanı Yedeği Alma</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-22T15:07:00+03:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Bugün sunucu üzerinde işlemler yaparken ne olur olmaz deyip mysql yedeğini alayım dedim. Aşağıdaki komut satırı ile veritabanı yedeğini alabiliyormuşuz.</p>
+
+<p><code>mysqldump -u username -p database&gt; backup_20121022.sql</code></p>
+
+<p><code>mysql</code> şifresini girdikten sonra bulunduğumuz dizine <code>backup_20121022.sql</code> isminde bir dosyaya veritabanı yedeğini alıyor.</p>
+
+<p>İyi çalışmalar.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/12/ruby-on-rails-te-client-side-validasyon/">Ruby on Rails&#8217;te Client Side Validasyon</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-12T15:00:00+03:00" pubdate data-updated="true">Oct 12<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Client Side validasyonlar için <a href="https://github.com/bcardarella/client_side_validations">ClientSideValidations</a> gemini kullanıyoruz. <code>Simple Form</code> ile çalışabilmesi içinde <a href="https://github.com/dockyard/client_side_validations-simple_form">ClientSideValidationsSimpleForm</a> gemini kullanıyoruz.</p>
+
+<h3>Kurulum</h3>
+
+<p>Gemleri <code>Gemfile</code>&#8217; a ekleyip <code>bundle install</code> yapalım</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;client_side_validations&#39;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;client_side_validations-simple_form&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Daha sonra kurulum komutunu çalştıralım.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rails</span> <span class="n">g</span> <span class="n">client_side_validations</span><span class="ss">:install</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>config/initializers/client_side_validations.rb</code> başlangıç dosyasının eklendiğini görüyoruz.</p>
+
+<p>Eğer istersek gem&#8217; lerin kullandığı javascript dosyaların assets dizinin altına kopyalayabiliriz.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rails</span> <span class="n">g</span> <span class="n">client_side_validations</span><span class="ss">:copy_assets</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/12/ruby-on-rails-te-client-side-validasyon/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -74,6 +1245,26 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/24/octopress-nasil-kullanilir/">Octopress nasıl kullanılır?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/27/rails-projelerinde-jquery-autocomplete-kullanimi/">Rails Projelerinde JQuery Autocomplete Kullanımı</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/25/ruby-on-rails-breadcrumbs-ekmek-kirintisi/">Ruby On Rails Breadcrumbs(Ekmek kırıntısı)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/24/globalize3-ile-coklu-dil-destegi-i18n/">globalize3 ile Çoklu Dil Desteği (I18n)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/21/postgresql-yedek-alma-ve-geri-yukleme/">PostgreSQL Yedek Alma ve Geri Yükleme</a>
+      </li>
     
   </ul>
 </section>
