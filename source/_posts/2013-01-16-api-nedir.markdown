@@ -1,0 +1,25 @@
+---
+layout: post
+title: "API nedir ?"
+date: 2012-10-05 14:57
+author: Muhammet DİLEK
+comments: true
+categories: api
+---
+`Application Programming Interface` kelimelerinin kısaltılmış halidir. `Application Programming Interface`' i açıklayacak olursak; Uygulama Geliştirme Arayüzü demektir. Buradaki `Arayüz` olarak çevirdiğimiz `Interface` kavramı kafamızı karıştırmasın. `Interface` Object-oriented programlamada kullanıdığımız `Interface Class`' ının tanımıyla aynıdır. `Interface Class`' lar kendini kullanacak alt `class` lara ; _**"Eğer sen beni kullanacaksan benim bazı metodlarım var. Sende onları kendi içinde tanımlayacaksın ve argumanları şu şu olacak**"_ diyerek kendi belirledikleri kuralları zorunlu hale getirirler. `API` kelimesinde geçen `Interface` kelimeside buradaki ile aynı anlamı taşımaktadırlar. Konuyu daha iyi anlamak için `Interface Class` larını incelemnizde fayda var diye düşünüyorum.
+
+`Interface` kavramına fazla takılmadan konumuza devam edelim. 
+<!-- more -->
+`API`' yi _**"Geliştirilen bir uygulamanın kodları açılmamak şartıyla başka programcılar tarafından kendi uygulamalarında kullanılabilmesine olanak sağlayan teknoloji"**_ olarak tanımlayabiliriz. Burada altını çizmek istediğim noktalar var. 
+
+* `kodları açılmamak şartıyla`; evet arkadaşlar başka bir geliştiricinin yazdığı uygulamanın kodlarını görmeden o uygulamayı kendi uygulamanızda kullanabiliyorsak bize bu imkanı sağlayan teknoloji `API`' dir. 
+
+* Bir diğer nokta ise `farklı programcılar`; aslında burada `farklı platformlar` desek daha uygun olacak. `API` sini kullandığımız uygulamanın hangi platformda yazıldığı bizi hiç ilgilendirmiyor. Biz sadece o uygulamanın `API` sinin bize sunduğu şeylerle ilgileniyoruz.
+
+Basit bir örnek verecek olursak;
+
+Nüfus ve Vatandaşlık İşleri Genel Müdürlüğünün tc kimlik no doğrulama [servisi](https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx?op=TCKimlikNoDogrula) var. Ben bir programcı olarak bunu `ruby` ile geliştirdiğim bir uygulamamda uygulamama üye olan kullanıcıların gerçek olup olmadığını kontrol etmek için kullanmak istiyorum. Servisin [döküman sayfasına](https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx?op=TCKimlikNoDogrula) gidip nasıl kullanılacağına bakıyorum. Sonrada bunu `ruby`' de nasıl kullanabilirm diye araştırıp, öğrenip uygulamama entegre ediyorum. İşte bu kadar :)
+
+Günümüzde popüler birçok uygulamanın `API`' ye sahip olduklarını görüyoruz. [Twitter](https://dev.twitter.com/),  [Github](http://developer.github.com/), [Facebook](https://developers.facebook.com/)... Daha iyi anlamak için bu `API`leri inceleyebilirsiniz.
+
+İyi çalışmalar
